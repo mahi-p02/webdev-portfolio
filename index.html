@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mahi — Creative Developer & Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Link to External CSS -->
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ── INTRO ── -->
+<div id="intro">
+  <div class="intro-content">
+    <h1 class="intro-name">Mahi</h1>
+    <div class="intro-tagline">Creative Developer · Designer · Builder</div>
+  </div>
+  <div class="intro-progress"></div>
+</div>
+
+<!-- ── PORTFOLIO ── -->
+<div id="portfolio">
+  <canvas id="bgCanvas"></canvas>
+
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a class="nav-brand" href="#">Mahi</a>
+    <ul class="nav-links">
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Work</a></li>
+    </ul>
+    <a class="nav-cta" href="#contact">Let's Talk</a>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section id="hero">
+    <div class="hero-left">
+      <div class="hero-status">
+        <span class="dot"></span>
+        Available for projects
+      </div>
+      <div class="hero-eyebrow">J&K, India · 2026</div>
+      <h1 class="hero-title">
+        I build digital<br>experiences that<br><span class="highlight">people love</span>
+      </h1>
+      <div class="hero-typewriter">
+        <span>Currently</span>&nbsp;<span id="tw-word"></span><span class="tw-cursor"></span>
+      </div>
+      <p class="hero-desc">
+        A full-stack developer and designer obsessed with craft, detail, and creating software that feels as good as it looks. Every pixel, every millisecond, every interaction matters.
+      </p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="#projects"><span>View My Work</span></a>
+        <a class="btn-ghost" href="#contact">Get in Touch</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="orb-wrap">
+        <div class="orb-glow"></div>
+        <div class="orb-ring-2"></div>
+        <div class="orb-ring"></div>
+        <canvas id="orbCanvas"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATS ── -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-icon">⚡</div>
+      <div class="stat-text">
+        <div class="stat-num" data-target="5">0</div>
+        <div class="stat-label">Projects</div>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">📅</div>
+      <div class="stat-text">
+        <div class="stat-num" data-target="2">0</div>
+        <div class="stat-label">Years Experience</div>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">💎</div>
+      <div class="stat-text">
+        <div class="stat-num" data-target="10">0</div>
+        <div class="stat-label">Happy Clients</div>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">🚀</div>
+      <div class="stat-text">
+        <div class="stat-num" data-target="20">0</div>
+        <div class="stat-label">K+ Lines of Code</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MARQUEE ── -->
+  <div class="marquee-strip">
+    <div class="marquee-inner">
+      <span>Frontend</span><span class="g">✦</span><span>Design</span><span class="g">✦</span><span>Backend</span><span class="g">✦</span><span>Craft</span><span class="g">✦</span><span>Detail</span><span class="g">✦</span><span>Impact</span><span class="g">✦</span><span>Performance</span><span class="g">✦</span>
+      <span>Frontend</span><span class="g">✦</span><span>Design</span><span class="g">✦</span><span>Backend</span><span class="g">✦</span><span>Craft</span><span class="g">✦</span><span>Detail</span><span class="g">✦</span><span>Impact</span><span class="g">✦</span><span>Performance</span><span class="g">✦</span>
+    </div>
+  </div>
+
+  <!-- ── ABOUT ── -->
+  <section id="about">
+    <div class="section-header">
+      <h2 class="sec-title">A bit <em>about</em> me</h2>
+    </div>
+
+    <div class="bento-grid">
+      <!-- Profile card -->
+      <div class="bento-card main profile-card reveal">
+        <div class="profile-header">
+          <div class="profile-avatar">M</div>
+          <div class="profile-info">
+            <h3>Mahi</h3>
+            <p>Developer & Designer</p>
+          </div>
+        </div>
+        <p class="profile-bio">
+          I'm a full-stack developer and product designer with a deep obsession for <strong>craft, detail, and impact</strong>. I believe great software isn't just functional — it's emotional. Every line of code, every animation, every micro-interaction is an opportunity to create something people actually enjoy using.
+        </p>
+        <div class="profile-tags">
+          <span class="tag">Full-Stack</span>
+          <span class="tag">UI/UX</span>
+          <span class="tag">Product</span>
+          <span class="tag">Motion</span>
+          <span class="tag">Systems</span>
+        </div>
+      </div>
+
+      <!-- Status card -->
+      <div class="bento-card status-card reveal reveal-delay-1">
+        <div class="status-indicator"></div>
+        <h4>Open to Work</h4>
+        <p>Available Now</p>
+      </div>
+
+      <!-- Location card -->
+      <div class="bento-card location-card reveal reveal-delay-2">
+        <div class="card-label">Based In</div>
+        <h3>India 🇮🇳</h3>
+        <p>Working globally, building locally. Available for remote collaboration worldwide.</p>
+        <div class="location-coords">34.0837° N, 74.7973° E</div>
+      </div>
+
+      <!-- Philosophy card -->
+      <div class="bento-card wide philosophy-card reveal reveal-delay-1">
+        <div class="quote-mark">"</div>
+        <blockquote>I build things that people actually enjoy using — and I care about every pixel, every millisecond, every interaction.</blockquote>
+      </div>
+
+      <!-- Experience card -->
+      <div class="bento-card experience-card reveal reveal-delay-2">
+        <div class="card-label">Experience</div>
+        <div class="exp-years">2+<span>years</span></div>
+        <p class="exp-desc">Building production software, designing interfaces, and shipping features that matter.</p>
+      </div>
+
+      <!-- Focus card -->
+      <div class="bento-card focus-card reveal reveal-delay-3">
+        <div class="card-label">My Focus</div>
+        <ul class="focus-list">
+          <li>Product Design</li>
+          <li>Frontend Engineering</li>
+          <li>Backend Systems</li>
+          <li>Developer Experience</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SKILLS ── -->
+  <section id="skills">
+    <div class="skills-container">
+      <div class="section-header">
+        <div class="sec-label">Expertise</div>
+        <h2 class="sec-title">Technologies I <em>wield</em></h2>
+      </div>
+
+      <div class="skills-marquee">
+        <div class="marquee-track left">
+          <div class="skill-card"><span class="skill-icon">⚛️</span><span class="skill-name">React</span></div>
+          <div class="skill-card"><span class="skill-icon">▲</span><span class="skill-name">Next.js</span></div>
+          <div class="skill-card"><span class="skill-icon">🟦</span><span class="skill-name">TypeScript</span></div>
+          <div class="skill-card"><span class="skill-icon">🎨</span><span class="skill-name">Tailwind</span></div>
+          <div class="skill-card"><span class="skill-icon">🟢</span><span class="skill-name">Node.js</span></div>
+          <div class="skill-card"><span class="skill-icon">🐍</span><span class="skill-name">Python</span></div>
+          <div class="skill-card"><span class="skill-icon">🎭</span><span class="skill-name">Figma</span></div>
+          <div class="skill-card"><span class="skill-icon">🔥</span><span class="skill-name">Firebase</span></div>
+          <div class="skill-card"><span class="skill-icon">⚛️</span><span class="skill-name">React</span></div>
+          <div class="skill-card"><span class="skill-icon">▲</span><span class="skill-name">Next.js</span></div>
+          <div class="skill-card"><span class="skill-icon">🟦</span><span class="skill-name">TypeScript</span></div>
+          <div class="skill-card"><span class="skill-icon">🎨</span><span class="skill-name">Tailwind</span></div>
+          <div class="skill-card"><span class="skill-icon">🟢</span><span class="skill-name">Node.js</span></div>
+          <div class="skill-card"><span class="skill-icon">🐍</span><span class="skill-name">Python</span></div>
+          <div class="skill-card"><span class="skill-icon">🎭</span><span class="skill-name">Figma</span></div>
+          <div class="skill-card"><span class="skill-icon">🔥</span><span class="skill-name">Firebase</span></div>
+        </div>
+        <div class="marquee-track right">
+          <div class="skill-card"><span class="skill-icon">🐘</span><span class="skill-name">PostgreSQL</span></div>
+          <div class="skill-card"><span class="skill-icon">☁️</span><span class="skill-name">AWS</span></div>
+          <div class="skill-card"><span class="skill-icon">🐙</span><span class="skill-name">Git</span></div>
+          <div class="skill-card"><span class="skill-icon">🐳</span><span class="skill-name">Docker</span></div>
+          <div class="skill-card"><span class="skill-icon">🧊</span><span class="skill-name">Three.js</span></div>
+          <div class="skill-card"><span class="skill-icon">⚡</span><span class="skill-name">Vite</span></div>
+          <div class="skill-card"><span class="skill-icon">📱</span><span class="skill-name">React Native</span></div>
+          <div class="skill-card"><span class="skill-icon">🤖</span><span class="skill-name">LangChain</span></div>
+          <div class="skill-card"><span class="skill-icon">🐘</span><span class="skill-name">PostgreSQL</span></div>
+          <div class="skill-card"><span class="skill-icon">☁️</span><span class="skill-name">AWS</span></div>
+          <div class="skill-card"><span class="skill-icon">🐙</span><span class="skill-name">Git</span></div>
+          <div class="skill-card"><span class="skill-icon">🐳</span><span class="skill-name">Docker</span></div>
+          <div class="skill-card"><span class="skill-icon">🧊</span><span class="skill-name">Three.js</span></div>
+          <div class="skill-card"><span class="skill-icon">⚡</span><span class="skill-name">Vite</span></div>
+          <div class="skill-card"><span class="skill-icon">📱</span><span class="skill-name">React Native</span></div>
+          <div class="skill-card"><span class="skill-icon">🤖</span><span class="skill-name">LangChain</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROJECTS ── -->
+  <section id="projects">
+    <div class="section-header">
+      <h2 class="sec-title">Projects I'm <em>proud</em> of</h2>
+    </div>
+
+    <div class="projects-grid">
+      <!-- Featured project -->
+      <div class="project-card featured reveal">
+        <div class="project-preview">
+          <span class="project-preview-icon">📊</span>
+        </div>
+        <div class="project-content">
+          <div class="project-meta">
+            <span class="project-category">SaaS · Analytics</span>
+            <span class="project-year">2026</span>
+          </div>
+          <h3 class="project-name">Pulse</h3>
+          <p class="project-desc">A high-performance analytics dashboard built for scale. Real-time data visualization, custom reports, and team collaboration — all in one beautiful interface.</p>
+          <div class="project-tags">
+            <span class="project-tag">React</span>
+            <span class="project-tag">GraphQL</span>
+            <span class="project-tag">D3.js</span>
+            <span class="project-tag">WebSockets</span>
+          </div>
+          <a href="#" class="project-link">View Project</a>
+        </div>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="project-card reveal">
+        <div class="project-preview">
+          <span class="project-preview-icon">🛍️</span>
+        </div>
+        <div class="project-content">
+          <div class="project-meta">
+            <span class="project-category">E-Commerce</span>
+            <span class="project-year">2026</span>
+          </div>
+          <h3 class="project-name">Foundry</h3>
+          <p class="project-desc">A blazing-fast storefront with seamless checkout and personalized recommendations.</p>
+          <div class="project-tags">
+            <span class="project-tag">Next.js</span>
+            <span class="project-tag">Sanity</span>
+            <span class="project-tag">Stripe</span>
+          </div>
+          <a href="#" class="project-link">View Project</a>
+        </div>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="project-card reveal">
+        <div class="project-preview">
+          <span class="project-preview-icon">✍️</span>
+        </div>
+        <div class="project-content">
+          <div class="project-meta">
+            <span class="project-category">AI · Productivity</span>
+            <span class="project-year">2026</span>
+          </div>
+          <h3 class="project-name">Drafted</h3>
+          <p class="project-desc">An AI-powered writing assistant that helps teams create better content, faster.</p>
+          <div class="project-tags">
+            <span class="project-tag">Python</span>
+            <span class="project-tag">LangChain</span>
+            <span class="project-tag">Svelte</span>
+          </div>
+          <a href="#" class="project-link">View Project</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONTACT ── -->
+  <section id="contact">
+    <div class="contact-content">
+      <h2 class="contact-title">
+        Let's build<br><em>something great</em>
+      </h2>
+      <p class="contact-desc">
+        Open to freelance projects, collaborations, and interesting conversations about design, code, and everything in between.
+      </p>
+      <a class="contact-email" href="mailto:mahipriyadarshi0@gmail.com">mahipriyadarshi0@gmail.com</a>
+      <div class="contact-socials">
+        <a href="#" class="social-link">GitHub</a>
+        <a href="#" class="social-link">LinkedIn</a>
+        <a href="#" class="social-link">Twitter</a>
+        <a href="#" class="social-link">Resume</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <span>© 2026 Mahi</span>
+    <span>Designed & built with intention</span>
+    <span><a href="#">Back to top ↑</a></span>
+  </footer>
+</div>
+
+<!-- Link to External JS -->
+<script src="script.js"></script>
+</body>
+</html>
