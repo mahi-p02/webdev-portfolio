@@ -42,58 +42,75 @@
     <a class="nav-cta" href="#contact">Let's Talk</a>
   </nav>
 
-  <!-- ── HERO ── -->
-  <section id="hero">
-    <div class="hero-left">
-      <div class="hero-status">
-        <span class="dot"></span>
-        Available for projects
-      </div>
-      <div class="hero-eyebrow">J&K, India · 2026</div>
-      <h1 class="hero-title">
-        I build digital<br>experiences that<br><span class="highlight">people love</span>
-      </h1>
-      <div class="hero-typewriter">
-        <span>Currently</span>&nbsp;<span id="tw-word"></span><span class="tw-cursor"></span>
-      </div>
-      <p class="hero-desc">
-        A full-stack developer and designer obsessed with craft, detail, and creating software that feels as good as it looks. Every pixel, every millisecond, every interaction matters.
-      </p>
-      <div class="hero-actions">
-        <a class="btn-primary" href="#projects"><span>View My Work</span></a>
-        <a class="btn-ghost" href="#contact">Get in Touch</a>
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-status">
+      <span class="dot"></span>
+      Available for work
+    </div>
+    <h1 class="hero-title">
+      Hey! It's <span id="tw-word" class="tw-word">Mahi</span>
+    </h1>
+    <p class="hero-desc">
+      A full-stack developer and designer obsessed with craft, detail, and creating software that feels as good as it looks. I build digital experience that people love.
+    </p><br>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#projects"><span>View My Work</span></a>
+      <a class="btn-ghost" href="#contact">Get in Touch</a>
+    </div>
+  </div>
+<div class="hero-right">
+  <div class="orb-wrap">
+    <div class="orb-glow"></div>
+    <!-- Keep your existing decorative rings if they serve a purpose, 
+         otherwise remove .orb-ring and .orb-ring-2 to avoid visual conflict -->
+    <canvas id="orbCanvas"></canvas>
+
+    <!-- ORBITAL RINGS WITH NODES -->
+    <div class="orbit-ring orbit-ring--design">
+      <div class="orbit-node">
+        <span class="orbit-icon">🎨</span>
+        <span class="orbit-text">Design</span>
       </div>
     </div>
-    <div class="hero-right">
-      <div class="orb-wrap">
-        <div class="orb-glow"></div>
-        <div class="orb-ring-2"></div>
-        <div class="orb-ring"></div>
-        <canvas id="orbCanvas"></canvas>
+
+    <div class="orbit-ring orbit-ring--frontend">
+      <div class="orbit-node">
+        <span class="orbit-icon">💻</span>
+        <span class="orbit-text">Frontend</span>
       </div>
     </div>
-  </section>
+
+    <div class="orbit-ring orbit-ring--backend">
+      <div class="orbit-node">
+        <span class="orbit-icon">⚙️</span>
+        <span class="orbit-text">Backend</span>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
 
   <!-- ── STATS ── -->
   <div class="stats-bar">
     <div class="stat-item">
       <div class="stat-icon">⚡</div>
       <div class="stat-text">
-        <div class="stat-num" data-target="5">0</div>
+        <div class="stat-num" data-target="5+">0</div>
         <div class="stat-label">Projects</div>
       </div>
     </div>
     <div class="stat-item">
       <div class="stat-icon">📅</div>
       <div class="stat-text">
-        <div class="stat-num" data-target="2">0</div>
+        <div class="stat-num" data-target="2+">0</div>
         <div class="stat-label">Years Experience</div>
       </div>
     </div>
     <div class="stat-item">
       <div class="stat-icon">💎</div>
       <div class="stat-text">
-        <div class="stat-num" data-target="10">0</div>
+        <div class="stat-num" data-target="15+">0</div>
         <div class="stat-label">Happy Clients</div>
       </div>
     </div>
@@ -106,13 +123,13 @@
     </div>
   </div>
 
-  <!-- ── MARQUEE ── -->
-  <div class="marquee-strip">
-    <div class="marquee-inner">
-      <span>Frontend</span><span class="g">✦</span><span>Design</span><span class="g">✦</span><span>Backend</span><span class="g">✦</span><span>Craft</span><span class="g">✦</span><span>Detail</span><span class="g">✦</span><span>Impact</span><span class="g">✦</span><span>Performance</span><span class="g">✦</span>
-      <span>Frontend</span><span class="g">✦</span><span>Design</span><span class="g">✦</span><span>Backend</span><span class="g">✦</span><span>Craft</span><span class="g">✦</span><span>Detail</span><span class="g">✦</span><span>Impact</span><span class="g">✦</span><span>Performance</span><span class="g">✦</span>
-    </div>
+<!-- ── MARQUEE ── -->
+<div class="marquee-strip">
+  <div class="marquee-inner">
+    <span>Frontend</span><span class="g">✦</span><span>Design</span><span class="g">✦</span><span>Backend</span><span class="g">✦</span><span>Craft</span><span class="g">✦</span><span>UI/UX</span><span class="g">✦</span><span>Credibility</span><span class="g">✦</span>
+    <span>Frontend</span><span class="g">✦</span><span>Design</span><span class="g">✦</span><span>Backend</span><span class="g">✦</span><span>Craft</span><span class="g">✦</span><span>UI/UX</span><span class="g">✦</span><span>Credibility</span><span class="g">✦</span>
   </div>
+</div>
 
   <!-- ── ABOUT ── -->
   <section id="about">
@@ -131,7 +148,7 @@
           </div>
         </div>
         <p class="profile-bio">
-          I'm a full-stack developer and product designer with a deep obsession for <strong>craft, detail, and impact</strong>. I believe great software isn't just functional — it's emotional. Every line of code, every animation, every micro-interaction is an opportunity to create something people actually enjoy using.
+          I'm a full-stack developer and product designer who enjoys bringing ideas to life through clean code, thoughtful interfaces, and purposeful experiences. I’m obsessed with the details that make a product feel right—from pixels and interactions to performance and security. For me, building isn't just about making things work; it's about making them meaningful.
         </p>
         <div class="profile-tags">
           <span class="tag">Full-Stack</span>
@@ -140,34 +157,6 @@
           <span class="tag">Motion</span>
           <span class="tag">Systems</span>
         </div>
-      </div>
-
-      <!-- Status card -->
-      <div class="bento-card status-card reveal reveal-delay-1">
-        <div class="status-indicator"></div>
-        <h4>Open to Work</h4>
-        <p>Available Now</p>
-      </div>
-
-      <!-- Location card -->
-      <div class="bento-card location-card reveal reveal-delay-2">
-        <div class="card-label">Based In</div>
-        <h3>India 🇮🇳</h3>
-        <p>Working globally, building locally. Available for remote collaboration worldwide.</p>
-        <div class="location-coords">34.0837° N, 74.7973° E</div>
-      </div>
-
-      <!-- Philosophy card -->
-      <div class="bento-card wide philosophy-card reveal reveal-delay-1">
-        <div class="quote-mark">"</div>
-        <blockquote>I build things that people actually enjoy using — and I care about every pixel, every millisecond, every interaction.</blockquote>
-      </div>
-
-      <!-- Experience card -->
-      <div class="bento-card experience-card reveal reveal-delay-2">
-        <div class="card-label">Experience</div>
-        <div class="exp-years">2+<span>years</span></div>
-        <p class="exp-desc">Building production software, designing interfaces, and shipping features that matter.</p>
       </div>
 
       <!-- Focus card -->
@@ -179,6 +168,19 @@
           <li>Backend Systems</li>
           <li>Developer Experience</li>
         </ul>
+      </div>
+
+      <!-- Experience card -->
+      <div class="bento-card experience-card reveal reveal-delay-2">
+        <div class="card-label">Experience</div>
+        <div class="exp-years">2+<span>years</span></div>
+        <p class="exp-desc">Building production software, designing interfaces, and shipping features that matter.</p>
+      </div>
+
+      <!-- Philosophy card -->
+      <div class="bento-card wide philosophy-card reveal reveal-delay-1">
+        <div class="quote-mark">"</div>
+        <blockquote>I build things that people actually enjoy using — and I care about every pixel, every millisecond, every interaction.</blockquote>
       </div>
     </div>
   </section>
@@ -249,7 +251,7 @@
             <span class="project-category">SaaS · Analytics</span>
             <span class="project-year">2026</span>
           </div>
-          <h3 class="project-name">Pulse</h3>
+          <h3 class="project-name">Tour Atlas</h3>
           <p class="project-desc">A high-performance analytics dashboard built for scale. Real-time data visualization, custom reports, and team collaboration — all in one beautiful interface.</p>
           <div class="project-tags">
             <span class="project-tag">React</span>

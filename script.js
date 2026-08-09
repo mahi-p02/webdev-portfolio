@@ -47,31 +47,43 @@ document.body.style.overflowY = 'hidden';
 
 /* ── TYPEWRITER ── */
 function startTypewriter() {
-  const roles = ['building interfaces', 'designing systems', 'crafting experiences', 'shipping products', 'writing clean code'];
-  let roleIndex = 0, charIndex = 0, isDeleting = false;
+  const name = 'Mahi';
   const el = document.getElementById('tw-word');
+  if (!el) return;
+
+  let charIndex = 0;
+  let isDeleting = false;
 
   function tick() {
-    const current = roles[roleIndex];
     if (!isDeleting) {
-      el.textContent = current.slice(0, ++charIndex);
-      if (charIndex === current.length) {
+      // ── TYPING PHASE ──
+      el.classList.add('typing');               // ← show cursor
+      el.textContent = name.slice(0, ++charIndex);
+
+      if (charIndex === name.length) {
+        // Name fully typed → HIDE cursor, wait 5s, then delete
+        el.classList.remove('typing');          // ← cursor disappears here
         isDeleting = true;
-        setTimeout(tick, 2500);
+        setTimeout(tick, 1000);
         return;
       }
-      setTimeout(tick, 70);
+
+      setTimeout(tick, 120);
     } else {
-      el.textContent = current.slice(0, --charIndex);
+      // ── DELETING PHASE ──
+      el.classList.add('typing');               // ← cursor back while deleting
+      el.textContent = name.slice(0, --charIndex);
+
       if (charIndex === 0) {
         isDeleting = false;
-        roleIndex = (roleIndex + 1) % roles.length;
         setTimeout(tick, 400);
         return;
       }
-      setTimeout(tick, 40);
+
+      setTimeout(tick, 60);
     }
   }
+
   tick();
 }
 
@@ -307,32 +319,30 @@ function initScrollReveal() {
 }
 
 /* ── STATS ── */
+/* ── STAT COUNT-UP ── */
 function animateStats() {
-  const stats = document.querySelectorAll('.stat-num');
-  const observer = new IntersectionObserver((entries) => {
+  const nums = document.querySelectorAll('.stat-num');
+  const sio = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
       const el = entry.target;
-      const target = parseInt(el.dataset.target, 10);
-      const duration = 1500;
+      const raw = el.dataset.target;                 // e.g. "5+", "20"
+      const target = parseInt(raw, 10) || 0;
+      const suffix = raw.replace(/[0-9]/g, '');       // captures "+" if present, else ""
+      const duration = 1400;
       const start = performance.now();
-
       function tick(now) {
-        const progress = Math.min((now - start) / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        el.textContent = Math.round(eased * target);
-        if (progress < 1) {
-          requestAnimationFrame(tick);
-        } else {
-          el.textContent = target;
-        }
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(eased * target) + (p >= 1 ? suffix : '');
+        if (p < 1) requestAnimationFrame(tick);
+        else el.textContent = target + suffix;
       }
       requestAnimationFrame(tick);
-      observer.unobserve(el);
+      sio.unobserve(el);
     });
   }, { threshold: 0.5 });
-
-  stats.forEach(stat => observer.observe(stat));
+  nums.forEach(n => sio.observe(n));
 }
 
 /* ── NAV & SCROLL PROGRESS ── */

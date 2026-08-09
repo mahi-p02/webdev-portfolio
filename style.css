@@ -222,11 +222,15 @@ nav {
 
 .nav-brand::before {
   content: '';
-  width: 8px;
-  height: 8px;
+  width: 17px;
+  height: 17px;
   background: var(--purple);
-  border-radius: 50%;
-  box-shadow: 0 0 12px var(--glow);
+  clip-path: polygon(
+    50% 0%, 61% 35%, 98% 35%, 68% 57%,
+    79% 91%, 50% 70%, 21% 91%, 32% 57%,
+    2% 35%, 39% 35%
+  );
+  filter: drop-shadow(0 0 6px var(--glow));
   animation: pulse 2s ease infinite;
 }
 
@@ -421,18 +425,26 @@ nav {
   animation: fadeUp 0.8s var(--ease) 0.9s forwards;
 }
 
-#tw-word {
-  color: var(--purple-2);
-  font-weight: 500;
+.tw-word {
+  color: #a78bfa;
 }
 
-.tw-cursor {
-  display: inline-block;
-  width: 1.5px;
-  height: 16px;
-  background: var(--purple-2);
+/* Cursor exists always (prevents layout shift) but is invisible by default */
+.tw-word::after {
+  content: '|';
+  color: #a78bfa;
   margin-left: 2px;
+  opacity: 0;
+}
+
+/* Cursor only blinks while the .typing class is active */
+.tw-word.typing::after {
   animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
 }
 
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
@@ -663,33 +675,29 @@ nav {
 .marquee-strip {
   overflow: hidden;
   white-space: nowrap;
-  padding: 20px 0;
+  padding: 10px 0;                 /* was 20px 0 */
   background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.03), transparent);
   border-bottom: 1px solid var(--border-2);
 }
-
 .marquee-inner {
   display: inline-block;
   animation: marquee 30s linear infinite;
 }
-
 .marquee-inner span {
   font-family: var(--serif);
-  font-size: 48px;
+  font-size: 26px;                 /* was 48px */
   font-style: italic;
   color: transparent;
   -webkit-text-stroke: 1px var(--dim);
   margin: 0 40px;
   display: inline-block;
 }
-
 .marquee-inner span.g {
   color: var(--purple-2);
   -webkit-text-stroke: 0;
-  font-size: 36px;
+  font-size: 20px;                 /* was 36px, kept proportional to the text above */
   vertical-align: middle;
 }
-
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
@@ -1612,4 +1620,126 @@ footer a:hover { color: var(--purple-3); }
   .testimonial-card { padding: 40px 24px; }
   .contact-socials { flex-direction: column; align-items: center; gap: 16px; }
   .marquee-inner span { font-size: 36px; margin: 0 24px; }
+}
+
+/* ── TYPEWRITER WORD ── */
+.tw-word {
+  color: #a78bfa;
+  font-style: italic;
+  position: relative;
+}
+.tw-word::after {
+  content: '|';
+  color: #a78bfa;
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+ 
+/* ══════════════════════════════════════════
+   ORBITAL RING SYSTEM — TIGHT FIT
+   ══════════════════════════════════════════ */
+
+/* ── Ring base ── */
+.orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed rgba(139, 92, 246, 0.18);
+  pointer-events: none;
+}
+
+/* ── Per-ring sizing — tight uniform gaps ── */
+.orbit-ring--design {
+  inset: -4%;
+  animation: orbit-spin 16s linear infinite;
+}
+.orbit-ring--frontend {
+  inset: -13%;
+  animation: orbit-spin 24s linear infinite reverse;
+  animation-delay: -9s;
+}
+.orbit-ring--backend {
+  inset: -22%;
+  animation: orbit-spin 34s linear infinite;
+  animation-delay: -21s;
+}
+
+@keyframes orbit-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Node — anchored BY EDGE to the ring line ── */
+.orbit-node {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  /* translateX(-50%) centers horizontally; translateY(-100%) pins
+     the BOTTOM edge of the pill exactly onto the ring line */
+  transform: translate(-50%, -100%);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 9px;
+  border-radius: 100px;
+  background: rgba(20, 18, 32, 0.75);
+  border: 1px solid rgba(139, 92, 246, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 255, 0.92);
+  white-space: nowrap;
+  pointer-events: auto;
+  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+}
+
+.orbit-node:hover {
+  border-color: #a78bfa;
+  background: rgba(139, 92, 246, 0.14);
+  box-shadow: 0 0 20px rgba(167, 139, 250, 0.2);
+}
+
+/* ── Counter-rotation — MUST use same transform origin logic ── */
+.orbit-ring--design .orbit-node {
+  animation: orbit-counter 16s linear infinite;
+}
+.orbit-ring--frontend .orbit-node {
+  animation: orbit-counter 24s linear infinite reverse;
+  animation-delay: -9s;
+}
+.orbit-ring--backend .orbit-node {
+  animation: orbit-counter 34s linear infinite;
+  animation-delay: -21s;
+}
+
+@keyframes orbit-counter {
+  to { transform: translate(-50%, -100%) rotate(-360deg); }
+}
+
+/* ── Icon & text ── */
+.orbit-icon {
+  font-size: 11px;
+  line-height: 1;
+  filter: grayscale(0.15);
+}
+.orbit-text {
+  font-weight: 500;
+}
+
+/* ── Pause on hover ── */
+.orb-wrap:hover .orbit-ring,
+.orb-wrap:hover .orbit-node {
+  animation-play-state: paused;
+}
+
+/* ── Accessibility ── */
+@media (prefers-reduced-motion: reduce) {
+  .orbit-ring,
+  .orbit-node {
+    animation: none !important;
+  }
 }
