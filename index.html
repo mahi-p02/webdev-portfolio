@@ -1,340 +1,898 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mahi — Creative Developer & Designer</title>
+
+<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<!-- Link to External CSS -->
-<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Tailwind Config -->
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg: '#120a1f',
+          'bg-2': '#160d24',
+          surface: 'rgba(20, 18, 32, 0.55)',
+          purple: '#8b5cf6',
+          'purple-2': '#a78bfa',
+          'purple-3': '#c4b5fd',
+          violet: '#7c3aed',
+          indigo: '#6366f1',
+          cream: '#f5f3ff',
+          text: 'rgba(245, 243, 255, 0.92)',
+          muted: 'rgba(245, 243, 255, 0.55)',
+          dim: 'rgba(245, 243, 255, 0.35)',
+          border: 'rgba(139, 92, 246, 0.18)',
+          'border-2': 'rgba(139, 92, 246, 0.08)',
+          glow: 'rgba(139, 92, 246, 0.35)',
+          success: '#4ade80',
+        },
+        fontFamily: {
+          serif: ['"Instrument Serif"', 'serif'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+          sans: ['"Inter"', 'sans-serif'],
+        },
+        animation: {
+          'marquee': 'marquee 30s linear infinite',
+          'marquee-right': 'marqueeRight 50s linear infinite',
+          'progress-fill': 'progressFill 2.5s ease-in-out forwards',
+        },
+        keyframes: {
+          marquee: {
+            '0%': { transform: 'translateX(0)' },
+            '100%': { transform: 'translateX(-50%)' },
+          },
+          marqueeRight: {
+            '0%': { transform: 'translateX(-50%)' },
+            '100%': { transform: 'translateX(0)' },
+          },
+          progressFill: {
+            'to': { width: '100%' },
+          }
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  /* Essential Custom Styles */
+  body {
+    background-color: #0f0a1a;
+    color: rgba(245, 243, 255, 0.92);
+    cursor: none; 
+  }
+  
+  /* Noise Texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: overlay;
+  }
+
+  #portfolio.visible {
+  opacity: 1;
+}
+
+  /* Animations */
+  .animate-fade-up { 
+    animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+  .animate-intro-name { 
+    animation: introName 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards; 
+    opacity: 0; 
+    transform: translateY(30px) scale(0.95);
+  }
+  @keyframes introName { 
+    to { opacity: 1; transform: translateY(0) scale(1); color: #a78bfa; text-shadow: 0 0 80px rgba(167, 139, 250, 0.2); } 
+  }
+
+  /* Typewriter Cursor */
+  .tw-word.typing::after { animation: blink 1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* Scroll Reveal State */
+  .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.22, 1, 0.36, 1); }
+  .reveal.vis { opacity: 1; transform: translateY(0); }
+
+  /* Canvas Positioning */
+  #bgCanvas { display: block; }
+</style>
 </head>
-<body>
+<body class="font-sans antialiased overflow-x-hidden selection:bg-purple selection:text-white">
 
-<div class="cursor-dot" id="cursorDot"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<!-- Custom Cursor -->
+<div id="cursorDot" class="fixed w-1.5 h-1.5 bg-purple-2 rounded-full pointer-events-none z-[10000] -translate-x-1/2 -translate-y-1/2 shadow-[0_0_12px_rgba(139,92,246,0.35)] transition-transform duration-150"></div>
+<div id="cursorRing" class="fixed w-10 h-10 border border-purple-2 rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 opacity-40 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"></div>
 
-<!-- ── INTRO ── -->
-<div id="intro">
-  <div class="intro-content">
-    <h1 class="intro-name">Mahi</h1>
-    <div class="intro-tagline">Creative Developer · Designer · Builder</div>
+<!-- Intro Screen -->
+<div id="intro" class="fixed inset-0 z-[1000] bg-bg flex items-center justify-center overflow-hidden transition-opacity duration-800">
+  <div class="text-center relative z-10">
+    <h1 class="font-mono text-[11px] tracking-[0.4em] uppercase text-purple-2 animate-fade-up" style="animation-delay: 0.3s;">Creative Developer</h1>
+    <h1 class="font-serif italic text-[80px] md:text-[18vw] lg:text-[200px] leading-none mt-5 mb-6 text-transparent [-webkit-text-stroke:1px_rgba(139,92,246,0.4)] animate-intro-name">Mahi</h1>
+    <div class="font-mono text-[10px] tracking-[0.35em] uppercase text-muted animate-fade-up" style="animation-delay: 1.2s;">Designer · Builder</div>
   </div>
-  <div class="intro-progress"></div>
+  <div class="absolute bottom-[60px] left-1/2 -translate-x-1/2 w-[60px] h-[1px] bg-border overflow-hidden">
+    <div class="h-full bg-gradient-to-r from-purple to-purple-2 w-0 animate-progress-fill"></div>
+  </div>
 </div>
 
-<!-- ── PORTFOLIO ── -->
-<div id="portfolio">
-  <canvas id="bgCanvas"></canvas>
+<!-- Main Portfolio Content -->
+<div id="portfolio" class="relative z-10 opacity-0 transition-opacity duration-1000">
+  
+  <!-- Background Canvas (Kept for subtle stars/blobs) -->
+  <canvas id="bgCanvas" class="fixed top-0 left-0 w-full h-full z-0 pointer-events-none"></canvas>
 
-  <div class="scroll-progress" id="scrollProgress"></div>
+  <!-- Scroll Progress -->
+  <div id="scrollProgress" class="fixed top-0 left-0 h-[2px] bg-gradient-to-r from-purple via-purple-2 to-indigo z-[600] w-0 shadow-[0_0_12px_rgba(139,92,246,0.35)] transition-[width] duration-100 linear"></div>
 
-  <!-- ── NAV ── -->
-  <nav>
-    <a class="nav-brand" href="#">Mahi</a>
-    <ul class="nav-links">
-      <li><a href="#hero">Home</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#projects">Work</a></li>
+  <!-- Navigation -->
+  <nav class="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-6 py-6 md:px-12 backdrop-blur-[20px] saturate-150 bg-black/30 border-b border-border-2 transition-all duration-300">
+    <a href="#" class="font-serif italic text-2xl text-cream flex items-center gap-2.5 group">
+      <span class="w-[17px] h-[17px] bg-purple inline-block [clip-path:polygon(50%_0%,_61%_35%,_98%_35%,_68%_57%,_79%_91%,_50%_70%,_21%_91%,_32%_57%,_2%_35%,_39%_35%)] shadow-[0_0_6px_rgba(139,92,246,0.35)] animate-pulse"></span>
+      Mahi
+    </a>
+    <ul class="hidden md:flex gap-10 list-none items-center">
+      <li><a href="#hero" class="font-mono text-[11px] tracking-[0.15em] uppercase text-muted hover:text-cream transition-colors relative py-1 before:content-[''] before:absolute before:bottom-[-2px] before:left-0 before:h-[1px] before:bg-purple-2 before:w-0 hover:before:w-full before:transition-[width] before:duration-300">Home</a></li>
+      <li><a href="#about" class="font-mono text-[11px] tracking-[0.15em] uppercase text-muted hover:text-cream transition-colors relative py-1 before:content-[''] before:absolute before:bottom-[-2px] before:left-0 before:h-[1px] before:bg-purple-2 before:w-0 hover:before:w-full before:transition-[width] before:duration-300">About</a></li>
+      <li><a href="#skills" class="font-mono text-[11px] tracking-[0.15em] uppercase text-muted hover:text-cream transition-colors relative py-1 before:content-[''] before:absolute before:bottom-[-2px] before:left-0 before:h-[1px] before:bg-purple-2 before:w-0 hover:before:w-full before:transition-[width] before:duration-300">Skills</a></li>
+      <li><a href="#projects" class="font-mono text-[11px] tracking-[0.15em] uppercase text-muted hover:text-cream transition-colors relative py-1 before:content-[''] before:absolute before:bottom-[-2px] before:left-0 before:h-[1px] before:bg-purple-2 before:w-0 hover:before:w-full before:transition-[width] before:duration-300">Work</a></li>
     </ul>
-    <a class="nav-cta" href="#contact">Let's Talk</a>
+    <a href="#contact" class="hidden md:inline-flex font-mono text-[10px] tracking-[0.18em] uppercase bg-cream text-bg px-5 py-2.5 rounded-full hover:bg-purple-2 hover:text-bg hover:shadow-[0_0_24px_rgba(167,139,250,0.2)] transition-all duration-300 font-medium">Let's Talk</a>
   </nav>
 
-<section id="hero">
-  <div class="hero-left">
-    <div class="hero-status">
-      <span class="dot"></span>
-      Available for work
-    </div>
-    <h1 class="hero-title">
-      Hey! It's <span id="tw-word" class="tw-word">Mahi</span>
-    </h1>
-    <p class="hero-desc">
-      A full-stack developer and designer obsessed with craft, detail, and creating software that feels as good as it looks. I build digital experience that people love.
-    </p><br>
-    <div class="hero-actions">
-      <a class="btn-primary" href="#projects"><span>View My Work</span></a>
-      <a class="btn-ghost" href="#contact">Get in Touch</a>
+<!-- Hero Section (CENTERED) -->
+<section id="hero" class="min-h-screen flex flex-col items-center justify-center pt-32 pb-20 px-6 md:px-12 relative overflow-hidden text-center">
+  
+  <!-- Grid Background -->
+  <div class="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.04)_1px,transparent_1px)] bg-[length:64px_64px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_70%)] pointer-events-none"></div>
+
+  <div class="relative z-5 max-w-[800px] mx-auto flex flex-col items-center">
+    
+    <!-- Name -->
+    <!-- CHANGED: 
+         1. Added 'uppercase' for a cleaner, more uniform look.
+         2. Changed tracking to 'tracking-[0.2em]' for wide, elegant spacing.
+         3. Adjusted font sizes to accommodate the extra width without breaking lines.
+    -->
+    <h1 class="font-['Montserrat'] uppercase text-[13vw] md:text-[17vw] lg:text-[190px] font-black leading-[0.9] tracking-[0.2em] mb-4 animate-fade-up" style="animation-delay: 0.4s;">
+  MAHI
+</h1>
+
+    <!-- Tagline -->
+    <!-- Slightly increased spacing here too for consistency -->
+    <h2 class="font-serif text-xl md:text-3xl text-muted italic mb-8 tracking-wide animate-fade-up" style="animation-delay: 0.5s;">
+      Where <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-2 to-indigo">design</span> meets <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-2 to-indigo">code</span>
+    </h2>
+    
+    <!-- Description -->
+    <p class="text-base md:text-lg leading-relaxed text-muted max-w-[550px] mb-12 font-light tracking-wide animate-fade-up" style="animation-delay: 0.6s;">
+      A full-stack developer and designer obsessed with craft, detail, and creating software that feels as good as it looks.
+    </p>
+    
+    <!-- Buttons -->
+    <div class="flex flex-wrap gap-4 items-center justify-center animate-fade-up" style="animation-delay: 0.8s;">
+      <a href="#projects" class="group inline-flex items-center gap-2.5 px-8 py-4 bg-gradient-to-br from-purple to-violet text-white font-mono text-[11px] tracking-[0.2em] uppercase rounded-full border-none transition-all duration-300 shadow-[0_4px_24px_rgba(139,92,246,0.35)] hover:-translate-y-0.5 hover:shadow-[0_8px_40px_rgba(139,92,246,0.35)] relative overflow-hidden">
+        <span class="absolute inset-0 bg-gradient-to-br from-purple-2 to-indigo opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+        <span class="relative z-10">View My Work</span>
+      </a>
+      <a href="#contact" class="inline-flex items-center gap-2.5 px-8 py-4 bg-transparent text-text font-mono text-[11px] tracking-[0.2em] uppercase rounded-full border border-border hover:border-purple-2 hover:text-purple-2 hover:bg-purple/5 transition-all duration-300">Get in Touch</a>
     </div>
   </div>
-<div class="hero-right">
-  <div class="orb-wrap">
-    <div class="orb-glow"></div>
-    <!-- Keep your existing decorative rings if they serve a purpose, 
-         otherwise remove .orb-ring and .orb-ring-2 to avoid visual conflict -->
-    <canvas id="orbCanvas"></canvas>
-
-    <!-- ORBITAL RINGS WITH NODES -->
-    <div class="orbit-ring orbit-ring--design">
-      <div class="orbit-node">
-        <span class="orbit-icon">🎨</span>
-        <span class="orbit-text">Design</span>
-      </div>
-    </div>
-
-    <div class="orbit-ring orbit-ring--frontend">
-      <div class="orbit-node">
-        <span class="orbit-icon">💻</span>
-        <span class="orbit-text">Frontend</span>
-      </div>
-    </div>
-
-    <div class="orbit-ring orbit-ring--backend">
-      <div class="orbit-node">
-        <span class="orbit-icon">⚙️</span>
-        <span class="orbit-text">Backend</span>
-      </div>
-    </div>
-  </div>
-</div>
 </section>
 
-  <!-- ── STATS ── -->
-  <div class="stats-bar">
-    <div class="stat-item">
-      <div class="stat-icon">⚡</div>
-      <div class="stat-text">
-        <div class="stat-num" data-target="5+">0</div>
-        <div class="stat-label">Projects</div>
+  <!-- Stats Bar -->
+  <div class="bg-surface border-y border-border-2 py-10 px-6 md:px-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 relative z-10 backdrop-blur-[20px]">
+    <div class="flex items-center gap-5 px-0 sm:px-10 py-4 border-b sm:border-b-0 sm:border-r border-border-2 last:border-0">
+      <div class="w-12 h-12 bg-gradient-to-br from-purple/10 to-purple/[0.02] border border-border rounded-xl flex items-center justify-center text-purple-2 text-xl shrink-0 transition-all duration-300 hover:border-purple-2 hover:shadow-[0_0_20px_rgba(167,139,250,0.2)] hover:scale-105">⚡</div>
+      <div>
+        <div class="font-sans text-3xl font-bold text-cream leading-none tracking-tight" data-target="5+">0</div>
+        <div class="font-mono text-[10px] text-dim mt-1 tracking-wider uppercase">Projects</div>
       </div>
     </div>
-    <div class="stat-item">
-      <div class="stat-icon">📅</div>
-      <div class="stat-text">
-        <div class="stat-num" data-target="2+">0</div>
-        <div class="stat-label">Years Experience</div>
+    <div class="flex items-center gap-5 px-0 sm:px-10 py-4 border-b sm:border-b-0 sm:border-r border-border-2 last:border-0">
+      <div class="w-12 h-12 bg-gradient-to-br from-purple/10 to-purple/[0.02] border border-border rounded-xl flex items-center justify-center text-purple-2 text-xl shrink-0 transition-all duration-300 hover:border-purple-2 hover:shadow-[0_0_20px_rgba(167,139,250,0.2)] hover:scale-105">📅</div>
+      <div>
+        <div class="font-sans text-3xl font-bold text-cream leading-none tracking-tight" data-target="2+">0</div>
+        <div class="font-mono text-[10px] text-dim mt-1 tracking-wider uppercase">Years Exp</div>
       </div>
     </div>
-    <div class="stat-item">
-      <div class="stat-icon">💎</div>
-      <div class="stat-text">
-        <div class="stat-num" data-target="15+">0</div>
-        <div class="stat-label">Happy Clients</div>
+    <div class="flex items-center gap-5 px-0 sm:px-10 py-4 border-b sm:border-b-0 sm:border-r border-border-2 last:border-0">
+      <div class="w-12 h-12 bg-gradient-to-br from-purple/10 to-purple/[0.02] border border-border rounded-xl flex items-center justify-center text-purple-2 text-xl shrink-0 transition-all duration-300 hover:border-purple-2 hover:shadow-[0_0_20px_rgba(167,139,250,0.2)] hover:scale-105">💎</div>
+      <div>
+        <div class="font-sans text-3xl font-bold text-cream leading-none tracking-tight" data-target="15+">0</div>
+        <div class="font-mono text-[10px] text-dim mt-1 tracking-wider uppercase">Clients</div>
       </div>
     </div>
-    <div class="stat-item">
-      <div class="stat-icon">🚀</div>
-      <div class="stat-text">
-        <div class="stat-num" data-target="20">0</div>
-        <div class="stat-label">K+ Lines of Code</div>
+    <div class="flex items-center gap-5 px-0 sm:px-10 py-4 border-b sm:border-b-0 sm:border-r border-border-2 last:border-0">
+      <div class="w-12 h-12 bg-gradient-to-br from-purple/10 to-purple/[0.02] border border-border rounded-xl flex items-center justify-center text-purple-2 text-xl shrink-0 transition-all duration-300 hover:border-purple-2 hover:shadow-[0_0_20px_rgba(167,139,250,0.2)] hover:scale-105">🚀</div>
+      <div>
+        <div class="font-sans text-3xl font-bold text-cream leading-none tracking-tight" data-target="20">0</div>
+        <div class="font-mono text-[10px] text-dim mt-1 tracking-wider uppercase">K+ Lines</div>
       </div>
     </div>
   </div>
 
-<!-- ── MARQUEE ── -->
-<div class="marquee-strip">
-  <div class="marquee-inner">
-    <span>Frontend</span><span class="g">✦</span><span>Design</span><span class="g">✦</span><span>Backend</span><span class="g">✦</span><span>Craft</span><span class="g">✦</span><span>UI/UX</span><span class="g">✦</span><span>Credibility</span><span class="g">✦</span>
-    <span>Frontend</span><span class="g">✦</span><span>Design</span><span class="g">✦</span><span>Backend</span><span class="g">✦</span><span>Craft</span><span class="g">✦</span><span>UI/UX</span><span class="g">✦</span><span>Credibility</span><span class="g">✦</span>
+  <!-- Marquee -->
+  <div class="overflow-hidden whitespace-nowrap py-2.5 bg-gradient-to-r from-transparent via-purple/[0.03] to-transparent border-b border-border-2">
+    <div class="inline-block animate-marquee">
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_var(--tw-colors-dim)] mx-10 inline-block">Frontend</span>
+      <span class="text-purple-2 [-webkit-text-stroke:0] text-[20px] align-middle mx-10 inline-block">✦</span>
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_var(--tw-colors-dim)] mx-10 inline-block">Design</span>
+      <span class="text-purple-2 [-webkit-text-stroke:0] text-[20px] align-middle mx-10 inline-block">✦</span>
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_var(--tw-colors-dim)] mx-10 inline-block">Backend</span>
+      <span class="text-purple-2 [-webkit-text-stroke:0] text-[20px] align-middle mx-10 inline-block">✦</span>
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_var(--tw-colors-dim)] mx-10 inline-block">Craft</span>
+      <span class="text-purple-2 [-webkit-text-stroke:0] text-[20px] align-middle mx-10 inline-block">✦</span>
+      <!-- Duplicate for loop -->
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_var(--tw-colors-dim)] mx-10 inline-block">Frontend</span>
+      <span class="text-purple-2 [-webkit-text-stroke:0] text-[20px] align-middle mx-10 inline-block">✦</span>
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_var(--tw-colors-dim)] mx-10 inline-block">Design</span>
+      <span class="text-purple-2 [-webkit-text-stroke:0] text-[20px] align-middle mx-10 inline-block">✦</span>
+    </div>
   </div>
-</div>
 
-  <!-- ── ABOUT ── -->
-  <section id="about">
-    <div class="section-header">
-      <h2 class="sec-title">A bit <em>about</em> me</h2>
+  <!-- About Section -->
+  <section id="about" class="py-[140px] px-6 md:px-12 relative z-10">
+    <div class="max-w-[900px] mb-20">
+      <h2 class="font-serif text-[42px] md:text-[6vw] lg:text-[72px] font-normal leading-none tracking-tight text-cream">A bit <em class="italic text-purple-2">about</em> me</h2>
     </div>
 
-    <div class="bento-grid">
-      <!-- Profile card -->
-      <div class="bento-card main profile-card reveal">
-        <div class="profile-header">
-          <div class="profile-avatar">M</div>
-          <div class="profile-info">
-            <h3>Mahi</h3>
-            <p>Developer & Designer</p>
-          </div>
-        </div>
-        <p class="profile-bio">
-          I'm a full-stack developer and product designer who enjoys bringing ideas to life through clean code, thoughtful interfaces, and purposeful experiences. I’m obsessed with the details that make a product feel right—from pixels and interactions to performance and security. For me, building isn't just about making things work; it's about making them meaningful.
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-[1400px] mx-auto">
+      <!-- Profile Card -->
+      <div class="bg-surface border border-border rounded-3xl p-8 md:col-span-2 md:row-span-2 relative overflow-hidden transition-all duration-500 hover:border-purple/35 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.3),0_0_40px_rgba(167,139,250,0.2)] backdrop-blur-[20px] reveal group">
+        <div class="absolute inset-0 bg-gradient-to-br from-purple/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <div class="flex items-center gap-5 mb-8">
+    <!-- Profile Picture Container -->
+    <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple to-violet flex items-center justify-center relative shadow-[0_8px_32px_rgba(139,92,246,0.35)] after:content-[''] after:absolute after:inset-[-3px] after:border after:border-purple-2 after:rounded-[22px] after:opacity-40 overflow-hidden">
+      <img 
+        src="pfp.png" 
+        alt="Mahi Profile Picture" 
+        class="w-full h-full object-contain rounded-2xl"
+      />
+    </div>
+    
+    <div>
+      <h3 class="font-serif text-2xl italic text-cream leading-none">Mahi</h3>
+      <p class="font-mono text-[11px] text-muted mt-1.5 tracking-wider">Developer & Designer</p>
+    </div>
+  </div>
+        <p class="text-[15px] leading-[1.8] text-muted font-light mb-8">
+          I'm a full-stack developer and product designer who enjoys bringing ideas to life through clean code, thoughtful interfaces, and purposeful experiences. I’m obsessed with the details that make a product feel right—from pixels and interactions to performance and security.
         </p>
-        <div class="profile-tags">
-          <span class="tag">Full-Stack</span>
-          <span class="tag">UI/UX</span>
-          <span class="tag">Product</span>
-          <span class="tag">Motion</span>
-          <span class="tag">Systems</span>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3.5 py-1.5 bg-purple/8 border border-border rounded-full font-mono text-[10px] tracking-wider uppercase text-purple-2 transition-all hover:bg-purple/15 hover:border-purple-2">Full-Stack</span>
+          <span class="px-3.5 py-1.5 bg-purple/8 border border-border rounded-full font-mono text-[10px] tracking-wider uppercase text-purple-2 transition-all hover:bg-purple/15 hover:border-purple-2">UI/UX</span>
+          <span class="px-3.5 py-1.5 bg-purple/8 border border-border rounded-full font-mono text-[10px] tracking-wider uppercase text-purple-2 transition-all hover:bg-purple/15 hover:border-purple-2">Product</span>
+          <span class="px-3.5 py-1.5 bg-purple/8 border border-border rounded-full font-mono text-[10px] tracking-wider uppercase text-purple-2 transition-all hover:bg-purple/15 hover:border-purple-2">Motion</span>
         </div>
       </div>
 
-      <!-- Focus card -->
-      <div class="bento-card focus-card reveal reveal-delay-3">
-        <div class="card-label">My Focus</div>
-        <ul class="focus-list">
-          <li>Product Design</li>
-          <li>Frontend Engineering</li>
-          <li>Backend Systems</li>
-          <li>Developer Experience</li>
-        </ul>
+      <!-- Focus Card -->
+      <div class="bg-surface border border-border rounded-3xl p-8 relative overflow-hidden transition-all duration-500 hover:border-purple/35 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.3),0_0_40px_rgba(167,139,250,0.2)] backdrop-blur-[20px] reveal reveal-delay-3 group">
+         <div class="absolute inset-0 bg-gradient-to-br from-purple/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+         <div class="font-mono text-[10px] tracking-[0.2em] uppercase text-dim mb-6">My Focus</div>
+         <ul class="list-none flex flex-col gap-3.5">
+           <li class="text-[15px] text-text flex items-center gap-3 before:content-['→'] before:text-purple-2 before:text-sm">Product Design</li>
+           <li class="text-[15px] text-text flex items-center gap-3 before:content-['→'] before:text-purple-2 before:text-sm">Frontend Eng</li>
+           <li class="text-[15px] text-text flex items-center gap-3 before:content-['→'] before:text-purple-2 before:text-sm">Backend Systems</li>
+           <li class="text-[15px] text-text flex items-center gap-3 before:content-['→'] before:text-purple-2 before:text-sm">Dev Experience</li>
+         </ul>
       </div>
 
-      <!-- Experience card -->
-      <div class="bento-card experience-card reveal reveal-delay-2">
-        <div class="card-label">Experience</div>
-        <div class="exp-years">2+<span>years</span></div>
-        <p class="exp-desc">Building production software, designing interfaces, and shipping features that matter.</p>
+      <!-- Experience Card -->
+      <div class="bg-surface border border-border rounded-3xl p-8 relative overflow-hidden transition-all duration-500 hover:border-purple/35 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.3),0_0_40px_rgba(167,139,250,0.2)] backdrop-blur-[20px] reveal reveal-delay-2 group">
+        <div class="absolute inset-0 bg-gradient-to-br from-purple/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <div class="font-mono text-[10px] tracking-[0.2em] uppercase text-dim mb-5">Experience</div>
+        <div class="font-sans text-6xl font-bold text-purple-2 leading-none tracking-tight mb-3">2+<span class="font-serif text-2xl italic text-muted ml-2 font-normal">years</span></div>
+        <p class="text-sm text-muted leading-relaxed">Building production software, designing interfaces, and shipping features.</p>
       </div>
 
-      <!-- Philosophy card -->
-      <div class="bento-card wide philosophy-card reveal reveal-delay-1">
-        <div class="quote-mark">"</div>
-        <blockquote>I build things that people actually enjoy using — and I care about every pixel, every millisecond, every interaction.</blockquote>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── SKILLS ── -->
-  <section id="skills">
-    <div class="skills-container">
-      <div class="section-header">
-        <div class="sec-label">Expertise</div>
-        <h2 class="sec-title">Technologies I <em>wield</em></h2>
-      </div>
-
-      <div class="skills-marquee">
-        <div class="marquee-track left">
-          <div class="skill-card"><span class="skill-icon">⚛️</span><span class="skill-name">React</span></div>
-          <div class="skill-card"><span class="skill-icon">▲</span><span class="skill-name">Next.js</span></div>
-          <div class="skill-card"><span class="skill-icon">🟦</span><span class="skill-name">TypeScript</span></div>
-          <div class="skill-card"><span class="skill-icon">🎨</span><span class="skill-name">Tailwind</span></div>
-          <div class="skill-card"><span class="skill-icon">🟢</span><span class="skill-name">Node.js</span></div>
-          <div class="skill-card"><span class="skill-icon">🐍</span><span class="skill-name">Python</span></div>
-          <div class="skill-card"><span class="skill-icon">🎭</span><span class="skill-name">Figma</span></div>
-          <div class="skill-card"><span class="skill-icon">🔥</span><span class="skill-name">Firebase</span></div>
-          <div class="skill-card"><span class="skill-icon">⚛️</span><span class="skill-name">React</span></div>
-          <div class="skill-card"><span class="skill-icon">▲</span><span class="skill-name">Next.js</span></div>
-          <div class="skill-card"><span class="skill-icon">🟦</span><span class="skill-name">TypeScript</span></div>
-          <div class="skill-card"><span class="skill-icon">🎨</span><span class="skill-name">Tailwind</span></div>
-          <div class="skill-card"><span class="skill-icon">🟢</span><span class="skill-name">Node.js</span></div>
-          <div class="skill-card"><span class="skill-icon">🐍</span><span class="skill-name">Python</span></div>
-          <div class="skill-card"><span class="skill-icon">🎭</span><span class="skill-name">Figma</span></div>
-          <div class="skill-card"><span class="skill-icon">🔥</span><span class="skill-name">Firebase</span></div>
-        </div>
-        <div class="marquee-track right">
-          <div class="skill-card"><span class="skill-icon">🐘</span><span class="skill-name">PostgreSQL</span></div>
-          <div class="skill-card"><span class="skill-icon">☁️</span><span class="skill-name">AWS</span></div>
-          <div class="skill-card"><span class="skill-icon">🐙</span><span class="skill-name">Git</span></div>
-          <div class="skill-card"><span class="skill-icon">🐳</span><span class="skill-name">Docker</span></div>
-          <div class="skill-card"><span class="skill-icon">🧊</span><span class="skill-name">Three.js</span></div>
-          <div class="skill-card"><span class="skill-icon">⚡</span><span class="skill-name">Vite</span></div>
-          <div class="skill-card"><span class="skill-icon">📱</span><span class="skill-name">React Native</span></div>
-          <div class="skill-card"><span class="skill-icon">🤖</span><span class="skill-name">LangChain</span></div>
-          <div class="skill-card"><span class="skill-icon">🐘</span><span class="skill-name">PostgreSQL</span></div>
-          <div class="skill-card"><span class="skill-icon">☁️</span><span class="skill-name">AWS</span></div>
-          <div class="skill-card"><span class="skill-icon">🐙</span><span class="skill-name">Git</span></div>
-          <div class="skill-card"><span class="skill-icon">🐳</span><span class="skill-name">Docker</span></div>
-          <div class="skill-card"><span class="skill-icon">🧊</span><span class="skill-name">Three.js</span></div>
-          <div class="skill-card"><span class="skill-icon">⚡</span><span class="skill-name">Vite</span></div>
-          <div class="skill-card"><span class="skill-icon">📱</span><span class="skill-name">React Native</span></div>
-          <div class="skill-card"><span class="skill-icon">🤖</span><span class="skill-name">LangChain</span></div>
-        </div>
+      <!-- Philosophy Card -->
+      <div class="bg-surface border border-border rounded-3xl p-8 md:col-span-2 relative overflow-hidden transition-all duration-500 hover:border-purple/35 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.3),0_0_40px_rgba(167,139,250,0.2)] backdrop-blur-[20px] reveal reveal-delay-1 group flex flex-col justify-center">
+        <div class="absolute inset-0 bg-gradient-to-br from-purple/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <div class="font-serif text-[72px] leading-[0.5] text-purple opacity-40 mb-5">"</div>
+        <blockquote class="font-serif text-2xl italic leading-relaxed text-cream">I build things that people actually enjoy using — and I care about every pixel, every millisecond, every interaction.</blockquote>
       </div>
     </div>
   </section>
 
-  <!-- ── PROJECTS ── -->
-  <section id="projects">
-    <div class="section-header">
-      <h2 class="sec-title">Projects I'm <em>proud</em> of</h2>
-    </div>
+<!-- Skills Section -->
+<section id="skills" class="py-[100px] px-6 md:px-12 relative z-10">
+  <!-- Subtle background accent -->
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-purple/5 blur-[120px] rounded-full pointer-events-none"></div>
 
-    <div class="projects-grid">
-      <!-- Featured project -->
-      <div class="project-card featured reveal">
-        <div class="project-preview">
-          <span class="project-preview-icon">📊</span>
-        </div>
-        <div class="project-content">
-          <div class="project-meta">
-            <span class="project-category">SaaS · Analytics</span>
-            <span class="project-year">2026</span>
-          </div>
-          <h3 class="project-name">Tour Atlas</h3>
-          <p class="project-desc">A high-performance analytics dashboard built for scale. Real-time data visualization, custom reports, and team collaboration — all in one beautiful interface.</p>
-          <div class="project-tags">
-            <span class="project-tag">React</span>
-            <span class="project-tag">GraphQL</span>
-            <span class="project-tag">D3.js</span>
-            <span class="project-tag">WebSockets</span>
-          </div>
-          <a href="#" class="project-link">View Project</a>
-        </div>
-      </div>
-
-      <!-- Project 2 -->
-      <div class="project-card reveal">
-        <div class="project-preview">
-          <span class="project-preview-icon">🛍️</span>
-        </div>
-        <div class="project-content">
-          <div class="project-meta">
-            <span class="project-category">E-Commerce</span>
-            <span class="project-year">2026</span>
-          </div>
-          <h3 class="project-name">Foundry</h3>
-          <p class="project-desc">A blazing-fast storefront with seamless checkout and personalized recommendations.</p>
-          <div class="project-tags">
-            <span class="project-tag">Next.js</span>
-            <span class="project-tag">Sanity</span>
-            <span class="project-tag">Stripe</span>
-          </div>
-          <a href="#" class="project-link">View Project</a>
-        </div>
-      </div>
-
-      <!-- Project 3 -->
-      <div class="project-card reveal">
-        <div class="project-preview">
-          <span class="project-preview-icon">✍️</span>
-        </div>
-        <div class="project-content">
-          <div class="project-meta">
-            <span class="project-category">AI · Productivity</span>
-            <span class="project-year">2026</span>
-          </div>
-          <h3 class="project-name">Drafted</h3>
-          <p class="project-desc">An AI-powered writing assistant that helps teams create better content, faster.</p>
-          <div class="project-tags">
-            <span class="project-tag">Python</span>
-            <span class="project-tag">LangChain</span>
-            <span class="project-tag">Svelte</span>
-          </div>
-          <a href="#" class="project-link">View Project</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── CONTACT ── -->
-  <section id="contact">
-    <div class="contact-content">
-      <h2 class="contact-title">
-        Let's build<br><em>something great</em>
+  <div class="max-w-[1200px] mx-auto relative">
+    
+    <!-- Header -->
+    <div class="mb-16 text-center md:text-left reveal">
+      <h2 class="font-serif text-[42px] md:text-[6vw] lg:text-[64px] font-normal leading-none tracking-tight text-cream">
+        My <em class="italic text-purple-2">Toolkit</em>
       </h2>
-      <p class="contact-desc">
+    </div>
+
+    <!-- Bento Grid Layout -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- COLUMN 1: FRONTEND -->
+      <div class="group relative bg-surface border border-border rounded-3xl p-8 backdrop-blur-md transition-all duration-500 hover:border-purple/40 hover:-translate-y-2 hover:shadow-[0_20px_60px_-15px_rgba(139,92,246,0.15)] reveal">
+        <!-- Card Glow Effect -->
+        <div class="absolute inset-0 bg-gradient-to-b from-purple/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-3xl"></div>
+        
+        <div class="relative z-10">
+          <div class="flex items-center gap-4 mb-8 pb-4 border-b border-border/50">
+            <div class="w-10 h-10 rounded-xl bg-purple/10 flex items-center justify-center text-purple-2">
+              1
+            </div>
+            <div>
+              <h3 class="font-serif text-2xl text-cream italic">Frontend</h3>
+              <p class="font-mono text-[10px] text-dim uppercase tracking-wider">Interface & Interaction</p>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-3">
+            <!-- React -->
+            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-purple/10 hover:border-purple/30 transition-all duration-300 cursor-default group/item">
+              <div class="flex items-center gap-3">
+                <img
+                  src="https://cdn.simpleicons.org/react"
+                  alt="React"
+                  class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all"
+                />
+                <span class="font-mono text-sm text-text font-medium">React</span>
+              </div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+            </div>
+
+            <!-- Next.js -->
+            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-purple/10 hover:border-purple/30 transition-all duration-300 cursor-default group/item">
+              <div class="flex items-center gap-3">
+               <img
+  src="https://cdn.simpleicons.org/nextdotjs"
+  alt="Next.js"
+  class="w-5 h-5 brightness-0 invert opacity-60 group-hover/item:opacity-100 transition-all duration-300"
+/>
+                <span class="font-mono text-sm text-text font-medium">Next.js</span>
+              </div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+            </div>
+
+            <!-- TypeScript -->
+            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-purple/10 hover:border-purple/30 transition-all duration-300 cursor-default group/item">
+              <div class="flex items-center gap-3">
+                <img
+  src="https://cdn.simpleicons.org/typescript"
+  alt="TypeScript"
+  class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all"
+/>
+                <span class="font-mono text-sm text-text font-medium">TypeScript</span>
+              </div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+            </div>
+
+            <!-- Tailwind CSS -->
+            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-purple/10 hover:border-purple/30 transition-all duration-300 cursor-default group/item">
+              <div class="flex items-center gap-3">
+                <img
+  src="https://cdn.simpleicons.org/tailwindcss"
+  alt="Tailwind CSS"
+  class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all"
+/>
+                <span class="font-mono text-sm text-text font-medium">Tailwind CSS</span>
+              </div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+            </div>
+            
+            <!-- Currently Learning Section -->
+          <div class="mt-6 pt-6 border-t border-border/50">
+             <div class="flex gap-3">
+               <div class="flex items-center gap-1.5">
+                 
+               </div>
+             </div>
+          </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLUMN 2: BACKEND -->
+      <div class="group relative bg-surface border border-border rounded-3xl p-8 backdrop-blur-md transition-all duration-500 hover:border-indigo/40 hover:-translate-y-2 hover:shadow-[0_20px_60px_-15px_rgba(99,102,241,0.15)] reveal" style="transition-delay: 100ms;">
+        <div class="absolute inset-0 bg-gradient-to-b from-indigo/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-3xl"></div>
+        
+        <div class="relative z-10">
+          <div class="flex items-center gap-4 mb-8 pb-4 border-b border-border/50">
+            <div class="w-10 h-10 rounded-xl bg-indigo/10 flex items-center justify-center text-indigo-400">
+             2
+            </div>
+            <div>
+              <h3 class="font-serif text-2xl text-cream italic">Backend</h3>
+              <p class="font-mono text-[10px] text-dim uppercase tracking-wider">Logic & Data</p>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-3">
+            <!-- Node.js -->
+            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-indigo/10 hover:border-indigo/30 transition-all duration-300 cursor-default group/item">
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-muted group-hover/item:text-green-500 transition-colors grayscale group-hover/item:grayscale-0" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                <span class="font-mono text-sm text-text font-medium">Node.js</span>
+              </div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+            </div>
+
+            <!-- PostgreSQL -->
+            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-indigo/10 hover:border-indigo/30 transition-all duration-300 cursor-default group/item">
+              <div class="flex items-center gap-3">
+                <img
+  src="https://cdn.simpleicons.org/postgresql"
+  alt="PostgreSQL"
+  class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all"
+/>
+                <span class="font-mono text-sm text-text font-medium">PostgreSQL</span>
+              </div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+            </div>
+
+            <!-- Firebase -->
+            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-indigo/10 hover:border-indigo/30 transition-all duration-300 cursor-default group/item">
+              <div class="flex items-center gap-3">
+                <img
+  src="https://cdn.simpleicons.org/firebase"
+  alt="Firebase"
+  class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all"
+/>
+                <span class="font-mono text-sm text-text font-medium">Firebase</span>
+              </div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+            </div>
+
+             <!-- Python -->
+            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-indigo/10 hover:border-indigo/30 transition-all duration-300 cursor-default group/item">
+              <div class="flex items-center gap-3">
+                <img
+  src="https://cdn.simpleicons.org/python"
+  alt="Python"
+  class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all"
+/>
+                <span class="font-mono text-sm text-text font-medium">Python</span>
+              </div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+            </div>
+
+            <!-- Currently Learning Section -->
+          <div class="mt-6 pt-6 border-t border-border/50">
+             <div class="flex gap-3">
+               <div class="flex items-center gap-1.5">
+                 
+               </div>
+             </div>
+          </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLUMN 3: TOOLS & DESIGN -->
+      <div class="group relative bg-surface border border-border rounded-3xl p-8 backdrop-blur-md transition-all duration-500 hover:border-violet/40 hover:-translate-y-2 hover:shadow-[0_20px_60px_-15px_rgba(124,58,237,0.15)] reveal" style="transition-delay: 200ms;">
+        <div class="absolute inset-0 bg-gradient-to-b from-violet/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-3xl"></div>
+        
+        <div class="relative z-10">
+          <div class="flex items-center gap-4 mb-8 pb-4 border-b border-border/50">
+            <div class="w-10 h-10 rounded-xl bg-violet/10 flex items-center justify-center text-violet-400">
+             3
+            </div>
+            <div>
+              <h3 class="font-serif text-2xl text-cream italic">Tools</h3>
+              <p class="font-mono text-[10px] text-dim uppercase tracking-wider">Workflow & Ops</p>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-3">
+            <!-- Git -->
+            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-violet/10 hover:border-violet/30 transition-all duration-300 cursor-default group/item">
+              <div class="flex items-center gap-3">
+                <img
+  src="https://cdn.simpleicons.org/git"
+  alt="Git"
+  class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all"
+/>
+                <span class="font-mono text-sm text-text font-medium">Git</span>
+              </div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+            </div>
+
+            <!-- Docker -->
+            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-violet/10 hover:border-violet/30 transition-all duration-300 cursor-default group/item">
+              <div class="flex items-center gap-3">
+                <img
+  src="https://cdn.simpleicons.org/docker"
+  alt="Docker"
+  class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all"
+/>
+                <span class="font-mono text-sm text-text font-medium">Docker</span>
+              </div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+            </div>
+
+            <!-- Vercel -->
+            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-violet/10 hover:border-violet/30 transition-all duration-300 cursor-default group/item">
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-muted group-hover/item:text-white transition-colors grayscale group-hover/item:grayscale-0" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2L2 19h20L12 2z"/>
+                </svg>
+                <span class="font-mono text-sm text-text font-medium">Vercel</span>
+              </div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+            </div>
+
+            <!-- Figma -->
+            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-violet/10 hover:border-violet/30 transition-all duration-300 cursor-default group/item">
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-muted group-hover/item:text-pink-500 transition-colors grayscale group-hover/item:grayscale-0" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 2h4v8H8a4 4 0 0 1 0-8Zm4 0h4a4 4 0 0 1 0 8h-4V2Zm0 8h4a4 4 0 0 1 0 8h-4v-8Zm-4 0h4v8H8a4 4 0 0 1 0-8Zm0 8h4v4a4 4 0 0 1-8 0 4 4 0 0 1 4-4Z"/>
+                </svg>
+                <span class="font-mono text-sm text-text font-medium">Figma</span>
+              </div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+            </div>
+          </div>
+          
+           <!-- Currently Learning Section -->
+          <div class="mt-6 pt-6 border-t border-border/50">
+             <div class="flex gap-3">
+               <div class="flex items-center gap-1.5">
+                 
+               </div>
+             </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+  
+  <!-- Projects Section -->
+  <section id="projects" class="py-[140px] px-6 md:px-12 relative z-10">
+    <div class="max-w-[1400px] mx-auto">
+      <div class="mb-20">
+        <h2 class="font-serif text-[42px] md:text-[6vw] lg:text-[72px] font-normal leading-none tracking-tight text-cream">Projects I'm <em class="italic text-purple-2">proud</em> of</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Featured Project -->
+        <div class="bg-surface border border-border rounded-3xl overflow-hidden relative transition-all duration-500 hover:border-purple/40 hover:-translate-y-1.5 hover:shadow-[0_30px_80px_rgba(0,0,0,0.4),0_0_60px_rgba(167,139,250,0.2)] backdrop-blur-[20px] cursor-none group md:col-span-2 grid md:grid-cols-2 reveal">
+          <div class="absolute inset-0 bg-gradient-to-br from-purple/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none"></div>
+          
+          <div class="h-60 md:h-full bg-gradient-to-br from-purple/15 to-indigo/8 relative overflow-hidden flex items-center justify-center min-h-[320px]">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(139,92,246,0.3),transparent_50%),radial-gradient(circle_at_70%_60%,rgba(99,102,241,0.2),transparent_50%)]"></div>
+            <span class="text-6xl relative z-20 opacity-60 transition-all duration-500 group-hover:scale-110 group-hover:opacity-100">📊</span>
+          </div>
+          
+          <div class="p-8 md:p-12 relative z-20 flex flex-col justify-center">
+            <div class="flex items-center justify-between mb-4">
+              <span class="font-mono text-[10px] tracking-[0.2em] uppercase text-purple-2 opacity-70">SaaS · Analytics</span>
+              <span class="font-mono text-[10px] text-dim tracking-[0.15em]">2026</span>
+            </div>
+            <h3 class="font-serif text-3xl md:text-[42px] italic text-cream mb-3 transition-colors duration-300 group-hover:text-purple-2">Tour Atlas</h3>
+            <p class="text-sm leading-relaxed text-muted mb-5">A high-performance analytics dashboard built for scale. Real-time data visualization, custom reports, and team collaboration — all in one beautiful interface.</p>
+            <div class="flex flex-wrap gap-2 mb-6">
+              <span class="px-3 py-1 border border-border rounded-full font-mono text-[9px] tracking-wider uppercase text-dim transition-all duration-300 group-hover:border-purple/30 group-hover:text-purple-2">React</span>
+              <span class="px-3 py-1 border border-border rounded-full font-mono text-[9px] tracking-wider uppercase text-dim transition-all duration-300 group-hover:border-purple/30 group-hover:text-purple-2">GraphQL</span>
+              <span class="px-3 py-1 border border-border rounded-full font-mono text-[9px] tracking-wider uppercase text-dim transition-all duration-300 group-hover:border-purple/30 group-hover:text-purple-2">D3.js</span>
+            </div>
+            <a href="#" class="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.15em] uppercase text-purple-2 no-underline transition-[gap] duration-300 hover:gap-3 after:content-['↗'] after:text-sm">View Project</a>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="bg-surface border border-border rounded-3xl overflow-hidden relative transition-all duration-500 hover:border-purple/40 hover:-translate-y-1.5 hover:shadow-[0_30px_80px_rgba(0,0,0,0.4),0_0_60px_rgba(167,139,250,0.2)] backdrop-blur-[20px] cursor-none group reveal">
+          <div class="absolute inset-0 bg-gradient-to-br from-purple/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none"></div>
+          <div class="h-60 bg-gradient-to-br from-purple/15 to-indigo/8 relative overflow-hidden flex items-center justify-center">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(139,92,246,0.3),transparent_50%),radial-gradient(circle_at_70%_60%,rgba(99,102,241,0.2),transparent_50%)]"></div>
+            <span class="text-6xl relative z-20 opacity-60 transition-all duration-500 group-hover:scale-110 group-hover:opacity-100">🛍️</span>
+          </div>
+          <div class="p-8 relative z-20">
+            <div class="flex items-center justify-between mb-4">
+              <span class="font-mono text-[10px] tracking-[0.2em] uppercase text-purple-2 opacity-70">E-Commerce</span>
+              <span class="font-mono text-[10px] text-dim tracking-[0.15em]">2026</span>
+            </div>
+            <h3 class="font-serif text-3xl italic text-cream mb-3 transition-colors duration-300 group-hover:text-purple-2">Foundry</h3>
+            <p class="text-sm leading-relaxed text-muted mb-5">A blazing-fast storefront with seamless checkout and personalized recommendations.</p>
+            <div class="flex flex-wrap gap-2 mb-6">
+              <span class="px-3 py-1 border border-border rounded-full font-mono text-[9px] tracking-wider uppercase text-dim transition-all duration-300 group-hover:border-purple/30 group-hover:text-purple-2">Next.js</span>
+              <span class="px-3 py-1 border border-border rounded-full font-mono text-[9px] tracking-wider uppercase text-dim transition-all duration-300 group-hover:border-purple/30 group-hover:text-purple-2">Stripe</span>
+            </div>
+            <a href="#" class="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.15em] uppercase text-purple-2 no-underline transition-[gap] duration-300 hover:gap-3 after:content-['↗'] after:text-sm">View Project</a>
+          </div>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="bg-surface border border-border rounded-3xl overflow-hidden relative transition-all duration-500 hover:border-purple/40 hover:-translate-y-1.5 hover:shadow-[0_30px_80px_rgba(0,0,0,0.4),0_0_60px_rgba(167,139,250,0.2)] backdrop-blur-[20px] cursor-none group reveal">
+          <div class="absolute inset-0 bg-gradient-to-br from-purple/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none"></div>
+          <div class="h-60 bg-gradient-to-br from-purple/15 to-indigo/8 relative overflow-hidden flex items-center justify-center">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(139,92,246,0.3),transparent_50%),radial-gradient(circle_at_70%_60%,rgba(99,102,241,0.2),transparent_50%)]"></div>
+            <span class="text-6xl relative z-20 opacity-60 transition-all duration-500 group-hover:scale-110 group-hover:opacity-100">✍️</span>
+          </div>
+          <div class="p-8 relative z-20">
+            <div class="flex items-center justify-between mb-4">
+              <span class="font-mono text-[10px] tracking-[0.2em] uppercase text-purple-2 opacity-70">AI · Productivity</span>
+              <span class="font-mono text-[10px] text-dim tracking-[0.15em]">2026</span>
+            </div>
+            <h3 class="font-serif text-3xl italic text-cream mb-3 transition-colors duration-300 group-hover:text-purple-2">Drafted</h3>
+            <p class="text-sm leading-relaxed text-muted mb-5">An AI-powered writing assistant that helps teams create better content, faster.</p>
+            <div class="flex flex-wrap gap-2 mb-6">
+              <span class="px-3 py-1 border border-border rounded-full font-mono text-[9px] tracking-wider uppercase text-dim transition-all duration-300 group-hover:border-purple/30 group-hover:text-purple-2">Python</span>
+              <span class="px-3 py-1 border border-border rounded-full font-mono text-[9px] tracking-wider uppercase text-dim transition-all duration-300 group-hover:border-purple/30 group-hover:text-purple-2">LangChain</span>
+            </div>
+            <a href="#" class="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.15em] uppercase text-purple-2 no-underline transition-[gap] duration-300 hover:gap-3 after:content-['↗'] after:text-sm">View Project</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-[180px] px-6 md:px-12 text-center relative z-10">
+    <div class="absolute inset-0 bg-radial-[ellipse_at_50%_50%,rgba(139,92,246,0.08),transparent_60%] pointer-events-none"></div>
+    
+    <div class="max-w-[800px] mx-auto relative z-10">
+      <div class="font-mono text-[11px] tracking-[0.3em] uppercase text-purple-2 mb-8">Get in touch</div>
+      <h2 class="font-serif text-[56px] md:text-[10vw] lg:text-[120px] font-normal leading-[0.95] tracking-tight text-cream mb-8">
+        Let's build<br><em class="italic text-purple-2 block">something great</em>
+      </h2>
+      <p class="text-lg leading-relaxed text-muted max-w-[500px] mx-auto mb-12">
         Open to freelance projects, collaborations, and interesting conversations about design, code, and everything in between.
       </p>
-      <a class="contact-email" href="mailto:mahipriyadarshi0@gmail.com">mahipriyadarshi0@gmail.com</a>
-      <div class="contact-socials">
-        <a href="#" class="social-link">GitHub</a>
-        <a href="#" class="social-link">LinkedIn</a>
-        <a href="#" class="social-link">Twitter</a>
-        <a href="#" class="social-link">Resume</a>
+      <a href="mailto:mahipriyadarshi0@gmail.com" class="inline-block font-serif text-2xl md:text-[28px] italic text-purple-2 no-underline py-4 border-b border-border hover:border-purple-2 hover:tracking-[0.01em] transition-all duration-300 mb-14">mahipriyadarshi0@gmail.com</a>
+      
+      <div class="flex flex-wrap justify-center gap-8">
+        <a href="#" class="flex items-center gap-2.5 font-mono text-[11px] tracking-[0.15em] uppercase text-muted no-underline px-6 py-3 border border-border rounded-full transition-all duration-300 hover:text-purple-2 hover:border-purple-2 hover:bg-purple/5 hover:-translate-y-0.5">GitHub</a>
+        <a href="#" class="flex items-center gap-2.5 font-mono text-[11px] tracking-[0.15em] uppercase text-muted no-underline px-6 py-3 border border-border rounded-full transition-all duration-300 hover:text-purple-2 hover:border-purple-2 hover:bg-purple/5 hover:-translate-y-0.5">LinkedIn</a>
+        <a href="#" class="flex items-center gap-2.5 font-mono text-[11px] tracking-[0.15em] uppercase text-muted no-underline px-6 py-3 border border-border rounded-full transition-all duration-300 hover:text-purple-2 hover:border-purple-2 hover:bg-purple/5 hover:-translate-y-0.5">Twitter</a>
+        <a href="#" class="flex items-center gap-2.5 font-mono text-[11px] tracking-[0.15em] uppercase text-muted no-underline px-6 py-3 border border-border rounded-full transition-all duration-300 hover:text-purple-2 hover:border-purple-2 hover:bg-purple/5 hover:-translate-y-0.5">Resume</a>
       </div>
     </div>
   </section>
 
-  <!-- ── FOOTER ── -->
-  <footer>
-    <span>© 2026 Mahi</span>
-    <span>Designed & built with intention</span>
-    <span><a href="#">Back to top ↑</a></span>
+  <!-- Footer -->
+  <footer class="border-t border-border-2 py-10 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-4 bg-surface backdrop-blur-[20px] relative z-10">
+    <span class="font-mono text-[10px] tracking-[0.15em] text-dim uppercase">© 2026 Mahi</span>
+    <span class="font-mono text-[10px] tracking-[0.15em] text-dim uppercase">Designed & built with intention</span>
+    <a href="#" class="font-mono text-[10px] tracking-[0.15em] text-dim uppercase hover:text-purple-2 transition-colors no-underline">Back to top ↑</a>
   </footer>
 </div>
 
-<!-- Link to External JS -->
-<script src="script.js"></script>
+<!-- Scripts -->
+<script>
+  /* ── CURSOR ── */
+  const cursorDot = document.getElementById('cursorDot');
+  const cursorRing = document.getElementById('cursorRing');
+  let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+  let ringX = mouseX, ringY = mouseY;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursorDot.style.left = mouseX + 'px';
+    cursorDot.style.top = mouseY + 'px';
+  });
+
+  function animateCursor() {
+    ringX += (mouseX - ringX) * 0.15;
+    ringY += (mouseY - ringY) * 0.15;
+    cursorRing.style.left = ringX + 'px';
+    cursorRing.style.top = ringY + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  // Add hover effect to interactive elements
+  document.querySelectorAll('a, button, .project-card, .skill-card, .bento-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+        cursorRing.classList.add('w-16', 'h-16', 'opacity-25', 'border-purple-3', 'bg-purple-2/10');
+        cursorRing.classList.remove('w-10', 'h-10', 'opacity-40', 'border-purple-2');
+    });
+    el.addEventListener('mouseleave', () => {
+        cursorRing.classList.remove('w-16', 'h-16', 'opacity-25', 'border-purple-3', 'bg-purple-2/10');
+        cursorRing.classList.add('w-10', 'h-10', 'opacity-40', 'border-purple-2');
+    });
+  });
+
+  /* ── INTRO ── */
+  const intro = document.getElementById('intro');
+  const portfolio = document.getElementById('portfolio');
+
+  setTimeout(() => {
+    intro.style.opacity = '0';
+    setTimeout(() => {
+      intro.style.display = 'none';
+      portfolio.classList.add('visible'); // Triggers opacity transition
+      document.body.style.overflowY = 'auto';
+      initBgCanvas();
+      initScrollReveal();
+      startTypewriter();
+    }, 800);
+  }, 3200);
+
+  document.body.style.overflowY = 'hidden';
+
+  /* ── TYPEWRITER ── */
+  function startTypewriter() {
+    const name = 'Mahi';
+    const el = document.getElementById('tw-word');
+    if (!el) return;
+
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function tick() {
+      if (!isDeleting) {
+        el.classList.add('typing');
+        el.textContent = name.slice(0, ++charIndex);
+        if (charIndex === name.length) {
+          el.classList.remove('typing');
+          isDeleting = true;
+          setTimeout(tick, 1000);
+          return;
+        }
+        setTimeout(tick, 120);
+      } else {
+        el.classList.add('typing');
+        el.textContent = name.slice(0, --charIndex);
+        if (charIndex === 0) {
+          isDeleting = false;
+          setTimeout(tick, 400);
+          return;
+        }
+        setTimeout(tick, 60);
+      }
+    }
+    tick();
+  }
+
+  /* ── BACKGROUND CANVAS ── */
+  function initBgCanvas() {
+    const canvas = document.getElementById('bgCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const stars = Array.from({ length: 150 }, () => ({
+      x: Math.random(), y: Math.random(), r: Math.random() * 1.2 + 0.3,
+      alpha: Math.random() * 0.4 + 0.1, twinkle: Math.random() * Math.PI * 2, speed: 0.008 + Math.random() * 0.012
+    }));
+
+    const blobs = [
+      { x: 0.15, y: 0.25, r: 0.3, hue: 270, sat: 70, lit: 35 },
+      { x: 0.85, y: 0.65, r: 0.35, hue: 280, sat: 65, lit: 30 },
+      { x: 0.5, y: 0.85, r: 0.25, hue: 255, sat: 80, lit: 38 }
+    ];
+
+    let time = 0;
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      blobs.forEach((blob, i) => {
+        const x = blob.x * width + Math.sin(time * 0.08 + i * 2) * width * 0.03;
+        const y = blob.y * height + Math.cos(time * 0.06 + i * 1.5) * height * 0.03;
+        const r = blob.r * Math.min(width, height) * (1 + 0.08 * Math.sin(time * 0.05 + i));
+        const gradient = ctx.createRadialGradient(x, y, 0, x, y, r);
+        gradient.addColorStop(0, `hsla(${blob.hue}, ${blob.sat}%, ${blob.lit}%, 0.12)`);
+        gradient.addColorStop(0.5, `hsla(${blob.hue}, ${blob.sat}%, ${blob.lit}%, 0.05)`);
+        gradient.addColorStop(1, `hsla(${blob.hue}, ${blob.sat}%, ${blob.lit}%, 0)`);
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+      });
+      stars.forEach(star => {
+        star.twinkle += star.speed;
+        const alpha = star.alpha * (0.4 + 0.6 * Math.sin(star.twinkle));
+        ctx.beginPath();
+        ctx.arc(star.x * width, star.y * height, star.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(200, 180, 255, ${alpha})`;
+        ctx.fill();
+      });
+      time += 0.01;
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  /* ── SCROLL REVEAL & STATS ── */
+  function initScrollReveal() {
+    const elements = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('vis');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
+    elements.forEach(el => observer.observe(el));
+    animateStats();
+  }
+
+  function animateStats() {
+    const nums = document.querySelectorAll('[data-target]');
+    const sio = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        const raw = el.dataset.target;
+        const target = parseInt(raw, 10) || 0;
+        const suffix = raw.replace(/[0-9]/g, '');
+        const duration = 1400;
+        const start = performance.now();
+        function tick(now) {
+          const p = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(eased * target) + (p >= 1 ? suffix : '');
+          if (p < 1) requestAnimationFrame(tick);
+          else el.textContent = target + suffix;
+        }
+        requestAnimationFrame(tick);
+        sio.unobserve(el);
+      });
+    }, { threshold: 0.5 });
+    nums.forEach(n => sio.observe(n));
+  }
+
+  /* ── NAV & SCROLL PROGRESS ── */
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a[href^="#"]');
+  const scrollProgress = document.getElementById('scrollProgress');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      if (window.scrollY >= section.offsetTop - 200) current = section.id;
+    });
+    navLinks.forEach(link => {
+      link.classList.toggle('text-purple-2', link.getAttribute('href') === '#' + current);
+      link.classList.toggle('before:w-full', link.getAttribute('href') === '#' + current);
+    });
+    const doc = document.documentElement;
+    const maxScroll = doc.scrollHeight - doc.clientHeight;
+    const percent = maxScroll > 0 ? (window.scrollY / maxScroll) * 100 : 0;
+    scrollProgress.style.width = percent + '%';
+  }, { passive: true });
+
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', e => {
+      const target = document.querySelector(anchor.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+</script>
 </body>
 </html>
