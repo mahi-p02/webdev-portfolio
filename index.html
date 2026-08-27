@@ -116,6 +116,89 @@
 
   /* Canvas Positioning */
   #bgCanvas { display: block; }
+
+  /* Individual name letters */
+.name-letter {
+  position: relative;
+  display: inline-block;
+  padding: 0 0.04em;
+  transition:
+    color 0.3s ease,
+    text-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+
+/* Glowing border */
+.name-letter::before {
+  content: "";
+  position: absolute;
+  inset: -8px -6px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent 20%,
+      rgba(167, 139, 250, 0.9),
+      transparent 80%
+    )
+    border-box;
+
+  -webkit-mask:
+    linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0);
+
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  opacity: 0;
+  transform: scale(0.85);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+
+  pointer-events: none;
+}
+
+/* Hover */
+.name-letter:hover {
+  color: #ffffff;
+
+  text-shadow:
+    0 0 10px rgba(167, 139, 250, 0.8),
+    0 0 30px rgba(139, 92, 246, 0.6),
+    0 0 60px rgba(139, 92, 246, 0.35);
+
+  transform: translateY(-4px);
+}
+
+.name-letter:hover::before {
+  opacity: 1;
+  transform: scale(1);
+  animation: letterGlow 1.2s linear infinite;
+}
+
+/* Moving glowing border */
+@keyframes letterGlow {
+  0% {
+    filter:
+      drop-shadow(0 0 2px rgba(167, 139, 250, 0.4))
+      drop-shadow(0 0 8px rgba(139, 92, 246, 0.2));
+  }
+
+  50% {
+    filter:
+      drop-shadow(0 0 6px rgba(167, 139, 250, 0.9))
+      drop-shadow(0 0 20px rgba(139, 92, 246, 0.6));
+  }
+
+  100% {
+    filter:
+      drop-shadow(0 0 2px rgba(167, 139, 250, 0.4))
+      drop-shadow(0 0 8px rgba(139, 92, 246, 0.2));
+  }
+}
 </style>
 </head>
 <body class="font-sans antialiased overflow-x-hidden selection:bg-purple selection:text-white">
@@ -174,9 +257,18 @@
          2. Changed tracking to 'tracking-[0.2em]' for wide, elegant spacing.
          3. Adjusted font sizes to accommodate the extra width without breaking lines.
     -->
-    <h1 class="font-['Montserrat'] uppercase text-[13vw] md:text-[17vw] lg:text-[190px] font-black leading-[0.9] tracking-[0.2em] mb-4 animate-fade-up" style="animation-delay: 0.4s;">
-  MAHI
-</h1>
+    <!-- Name -->
+      <h1
+        class="font-['Montserrat'] uppercase text-[13vw] md:text-[17vw] lg:text-[190px] font-black leading-[0.9] tracking-[0.12em] mb-4 flex items-center justify-center animate-fade-up"
+        style="animation-delay: 0.4s;"
+      >
+        
+        <span class="name-letter">M</span>
+        <span class="name-letter">A</span>
+        <span class="name-letter">H</span>
+        <span class="name-letter">I</span>
+
+      </h1>
 
     <!-- Tagline -->
     <!-- Slightly increased spacing here too for consistency -->
@@ -232,24 +324,95 @@
     </div>
   </div>
 
-  <!-- Marquee -->
-  <div class="overflow-hidden whitespace-nowrap py-2.5 bg-gradient-to-r from-transparent via-purple/[0.03] to-transparent border-b border-border-2">
-    <div class="inline-block animate-marquee">
-      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_var(--tw-colors-dim)] mx-10 inline-block">Frontend</span>
-      <span class="text-purple-2 [-webkit-text-stroke:0] text-[20px] align-middle mx-10 inline-block">✦</span>
-      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_var(--tw-colors-dim)] mx-10 inline-block">Design</span>
-      <span class="text-purple-2 [-webkit-text-stroke:0] text-[20px] align-middle mx-10 inline-block">✦</span>
-      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_var(--tw-colors-dim)] mx-10 inline-block">Backend</span>
-      <span class="text-purple-2 [-webkit-text-stroke:0] text-[20px] align-middle mx-10 inline-block">✦</span>
-      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_var(--tw-colors-dim)] mx-10 inline-block">Craft</span>
-      <span class="text-purple-2 [-webkit-text-stroke:0] text-[20px] align-middle mx-10 inline-block">✦</span>
-      <!-- Duplicate for loop -->
-      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_var(--tw-colors-dim)] mx-10 inline-block">Frontend</span>
-      <span class="text-purple-2 [-webkit-text-stroke:0] text-[20px] align-middle mx-10 inline-block">✦</span>
-      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_var(--tw-colors-dim)] mx-10 inline-block">Design</span>
-      <span class="text-purple-2 [-webkit-text-stroke:0] text-[20px] align-middle mx-10 inline-block">✦</span>
+<div class="overflow-hidden whitespace-nowrap py-2.5 bg-gradient-to-r from-transparent via-purple/[0.03] to-transparent border-b border-border-2">
+
+  <div class="flex w-max animate-marquee">
+
+    <!-- FIRST COMPLETE SET -->
+    <div class="flex shrink-0 items-center">
+
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.45)] mx-10">
+        Craft
+      </span>
+
+      <span class="text-purple-2 text-[20px] mx-10">✦</span>
+
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.45)] mx-10">
+        Scalability
+      </span>
+
+      <span class="text-purple-2 text-[20px] mx-10">✦</span>
+
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.45)] mx-10">
+        Integration
+      </span>
+
+      <span class="text-purple-2 text-[20px] mx-10">✦</span>
+
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.45)] mx-10">
+        Deployment
+      </span>
+
+      <span class="text-purple-2 text-[20px] mx-10">✦</span>
+
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.45)] mx-10">
+        APIs
+      </span>
+
+      <span class="text-purple-2 text-[20px] mx-10">✦</span>
+
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.45)] mx-10">
+        Reliability
+      </span>
+
+      <span class="text-purple-2 text-[20px] mx-10">✦</span>
+
     </div>
+
+
+    <!-- SECOND SET — EXACT SAME CONTENT -->
+    <div class="flex shrink-0 items-center">
+
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.45)] mx-10">
+        Craft
+      </span>
+
+      <span class="text-purple-2 text-[20px] mx-10">✦</span>
+
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.45)] mx-10">
+        Scalability
+      </span>
+
+      <span class="text-purple-2 text-[20px] mx-10">✦</span>
+
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.45)] mx-10">
+        Integration
+      </span>
+
+      <span class="text-purple-2 text-[20px] mx-10">✦</span>
+
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.45)] mx-10">
+        Deployment
+      </span>
+
+      <span class="text-purple-2 text-[20px] mx-10">✦</span>
+
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.45)] mx-10">
+        APIs
+      </span>
+
+      <span class="text-purple-2 text-[20px] mx-10">✦</span>
+
+      <span class="font-serif text-[26px] italic text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.45)] mx-10">
+        Reliability
+      </span>
+
+      <span class="text-purple-2 text-[20px] mx-10">✦</span>
+
+    </div>
+
   </div>
+</div>
 
   <!-- About Section -->
   <section id="about" class="py-[140px] px-6 md:px-12 relative z-10">
@@ -264,11 +427,11 @@
         <div class="flex items-center gap-5 mb-8">
     <!-- Profile Picture Container -->
     <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple to-violet flex items-center justify-center relative shadow-[0_8px_32px_rgba(139,92,246,0.35)] after:content-[''] after:absolute after:inset-[-3px] after:border after:border-purple-2 after:rounded-[22px] after:opacity-40 overflow-hidden">
-      <img 
-        src="pfp.png" 
-        alt="Mahi Profile Picture" 
-        class="w-full h-full object-contain rounded-2xl"
-      />
+      <img  
+  src="pfp.png"  
+  alt="Mahi Profile Picture"  
+  class="w-full h-full object-cover rounded-2xl relative z-10 border-2 border-gray transition-transform duration-500 group-hover:scale-110"
+/>
     </div>
     
     <div>
@@ -278,6 +441,13 @@
   </div>
         <p class="text-[15px] leading-[1.8] text-muted font-light mb-8">
           I'm a full-stack developer and product designer who enjoys bringing ideas to life through clean code, thoughtful interfaces, and purposeful experiences. I’m obsessed with the details that make a product feel right—from pixels and interactions to performance and security.
+          <br><br>
+          I'm also passionate about data analytics and finding meaningful insights
+          through data. Whether I'm designing an interface, building an API,
+          analyzing a dataset, or testing an application's security, I enjoy
+          understanding how things work beneath the surface and continuously improving
+          them.
+        </p>
         </p>
         <div class="flex flex-wrap gap-2">
           <span class="px-3.5 py-1.5 bg-purple/8 border border-border rounded-full font-mono text-[10px] tracking-wider uppercase text-purple-2 transition-all hover:bg-purple/15 hover:border-purple-2">Full-Stack</span>
@@ -318,6 +488,62 @@
 
 <!-- Skills Section -->
 <section id="skills" class="py-[100px] px-6 md:px-12 relative z-10">
+  
+  <!-- Custom Styles for Loading Animation -->
+<style>
+  /* =========================================
+     SKILL BAR ANIMATION
+     👉 Change speed: update BOTH "6s" here
+        AND ANIMATION_DURATION in <script> below
+  ========================================= */
+
+  @keyframes loadWidth {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+
+  .animate-load-bar {
+    width: 100%;              /* full width now — we scale it instead */
+    transform: scaleX(0);     /* starts invisible/collapsed */
+    transform-origin: left;   /* grows from left to right */
+  }
+
+  #skills-container.skills-loading .animate-load-bar {
+    animation: loadWidth 3s ease-out forwards;
+  }
+
+  /* Locks the bar fully grown after animation ends */
+  #skills-container.skills-loaded .animate-load-bar {
+    transform: scaleX(1);
+  }
+
+
+  /* =========================================
+     HOVER EFFECTS DURING LOADING
+  ========================================= */
+
+  #skills-container.skills-loading .group\/item {
+    background-color: rgba(139, 92, 246, 0.10);
+    border-color: rgba(139, 92, 246, 0.30);
+  }
+
+  #skills-container.skills-loading .col-backend .group\/item {
+    background-color: rgba(99, 102, 241, 0.10);
+    border-color: rgba(99, 102, 241, 0.30);
+  }
+
+  #skills-container.skills-loading .col-tools .group\/item {
+    background-color: rgba(124, 58, 237, 0.10);
+    border-color: rgba(124, 58, 237, 0.30);
+  }
+
+  #skills-container.skills-loading .group\/item img,
+  #skills-container.skills-loading .group\/item svg {
+    filter: grayscale(0);
+    opacity: 1 !important;
+  }
+</style>
+
   <!-- Subtle background accent -->
   <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-purple/5 blur-[120px] rounded-full pointer-events-none"></div>
 
@@ -331,8 +557,9 @@
     </div>
 
     <!-- Bento Grid Layout -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      
+    <!-- Added ID 'skills-container' for JS targeting -->
+    <div id="skills-container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
       <!-- COLUMN 1: FRONTEND -->
       <div class="group relative bg-surface border border-border rounded-3xl p-8 backdrop-blur-md transition-all duration-500 hover:border-purple/40 hover:-translate-y-2 hover:shadow-[0_20px_60px_-15px_rgba(139,92,246,0.15)] reveal">
         <!-- Card Glow Effect -->
@@ -351,63 +578,46 @@
 
           <div class="flex flex-col gap-3">
             <!-- React -->
-            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-purple/10 hover:border-purple/30 transition-all duration-300 cursor-default group/item">
+            <div class="skill-item flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-purple/10 hover:border-purple/30 transition-all duration-300 cursor-default group/item">
               <div class="flex items-center gap-3">
-                <img
-                  src="https://cdn.simpleicons.org/react"
-                  alt="React"
-                  class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all"
-                />
+                <img src="https://cdn.simpleicons.org/react" alt="React" class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all" />
                 <span class="font-mono text-sm text-text font-medium">React</span>
               </div>
-              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+              <!-- Changed w-[100%] to animate-load-bar -->
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 animate-load-bar"></div></div>
             </div>
 
             <!-- Next.js -->
-            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-purple/10 hover:border-purple/30 transition-all duration-300 cursor-default group/item">
+            <div class="skill-item flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-purple/10 hover:border-purple/30 transition-all duration-300 cursor-default group/item">
               <div class="flex items-center gap-3">
-               <img
-  src="https://cdn.simpleicons.org/nextdotjs"
-  alt="Next.js"
-  class="w-5 h-5 brightness-0 invert opacity-60 group-hover/item:opacity-100 transition-all duration-300"
-/>
+               <img src="https://cdn.simpleicons.org/nextdotjs" alt="Next.js" class="w-5 h-5 brightness-0 invert opacity-60 group-hover/item:opacity-100 transition-all duration-300" />
                 <span class="font-mono text-sm text-text font-medium">Next.js</span>
               </div>
-              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 animate-load-bar"></div></div>
             </div>
 
             <!-- TypeScript -->
-            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-purple/10 hover:border-purple/30 transition-all duration-300 cursor-default group/item">
+            <div class="skill-item flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-purple/10 hover:border-purple/30 transition-all duration-300 cursor-default group/item">
               <div class="flex items-center gap-3">
-                <img
-  src="https://cdn.simpleicons.org/typescript"
-  alt="TypeScript"
-  class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all"
-/>
+                <img src="https://cdn.simpleicons.org/typescript" alt="TypeScript" class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all" />
                 <span class="font-mono text-sm text-text font-medium">TypeScript</span>
               </div>
-              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 animate-load-bar"></div></div>
             </div>
 
             <!-- Tailwind CSS -->
-            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-purple/10 hover:border-purple/30 transition-all duration-300 cursor-default group/item">
+            <div class="skill-item flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-purple/10 hover:border-purple/30 transition-all duration-300 cursor-default group/item">
               <div class="flex items-center gap-3">
-                <img
-  src="https://cdn.simpleicons.org/tailwindcss"
-  alt="Tailwind CSS"
-  class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all"
-/>
+                <img src="https://cdn.simpleicons.org/tailwindcss" alt="Tailwind CSS" class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all" />
                 <span class="font-mono text-sm text-text font-medium">Tailwind CSS</span>
               </div>
-              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 animate-load-bar"></div></div>
             </div>
             
             <!-- Currently Learning Section -->
           <div class="mt-6 pt-6 border-t border-border/50">
              <div class="flex gap-3">
-               <div class="flex items-center gap-1.5">
-                 
-               </div>
+               <div class="flex items-center gap-1.5"></div>
              </div>
           </div>
           </div>
@@ -415,7 +625,7 @@
       </div>
 
       <!-- COLUMN 2: BACKEND -->
-      <div class="group relative bg-surface border border-border rounded-3xl p-8 backdrop-blur-md transition-all duration-500 hover:border-indigo/40 hover:-translate-y-2 hover:shadow-[0_20px_60px_-15px_rgba(99,102,241,0.15)] reveal" style="transition-delay: 100ms;">
+      <div class="group relative bg-surface border border-border rounded-3xl p-8 backdrop-blur-md transition-all duration-500 hover:border-indigo/40 hover:-translate-y-2 hover:shadow-[0_20px_60px_-15px_rgba(99,102,241,0.15)] reveal col-backend" style="transition-delay: 100ms;">
         <div class="absolute inset-0 bg-gradient-to-b from-indigo/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-3xl"></div>
         
         <div class="relative z-10">
@@ -431,61 +641,47 @@
 
           <div class="flex flex-col gap-3">
             <!-- Node.js -->
-            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-indigo/10 hover:border-indigo/30 transition-all duration-300 cursor-default group/item">
+            <div class="skill-item flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-indigo/10 hover:border-indigo/30 transition-all duration-300 cursor-default group/item">
               <div class="flex items-center gap-3">
                 <svg class="w-5 h-5 text-muted group-hover/item:text-green-500 transition-colors grayscale group-hover/item:grayscale-0" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                 </svg>
                 <span class="font-mono text-sm text-text font-medium">Node.js</span>
               </div>
-              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 animate-load-bar"></div></div>
             </div>
 
             <!-- PostgreSQL -->
-            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-indigo/10 hover:border-indigo/30 transition-all duration-300 cursor-default group/item">
+            <div class="skill-item flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-indigo/10 hover:border-indigo/30 transition-all duration-300 cursor-default group/item">
               <div class="flex items-center gap-3">
-                <img
-  src="https://cdn.simpleicons.org/postgresql"
-  alt="PostgreSQL"
-  class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all"
-/>
+                <img src="https://cdn.simpleicons.org/postgresql" alt="PostgreSQL" class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all" />
                 <span class="font-mono text-sm text-text font-medium">PostgreSQL</span>
               </div>
-              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 animate-load-bar"></div></div>
             </div>
 
             <!-- Firebase -->
-            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-indigo/10 hover:border-indigo/30 transition-all duration-300 cursor-default group/item">
+            <div class="skill-item flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-indigo/10 hover:border-indigo/30 transition-all duration-300 cursor-default group/item">
               <div class="flex items-center gap-3">
-                <img
-  src="https://cdn.simpleicons.org/firebase"
-  alt="Firebase"
-  class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all"
-/>
+                <img src="https://cdn.simpleicons.org/firebase" alt="Firebase" class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all" />
                 <span class="font-mono text-sm text-text font-medium">Firebase</span>
               </div>
-              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 animate-load-bar"></div></div>
             </div>
 
              <!-- Python -->
-            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-indigo/10 hover:border-indigo/30 transition-all duration-300 cursor-default group/item">
+            <div class="skill-item flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-indigo/10 hover:border-indigo/30 transition-all duration-300 cursor-default group/item">
               <div class="flex items-center gap-3">
-                <img
-  src="https://cdn.simpleicons.org/python"
-  alt="Python"
-  class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all"
-/>
+                <img src="https://cdn.simpleicons.org/python" alt="Python" class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all" />
                 <span class="font-mono text-sm text-text font-medium">Python</span>
               </div>
-              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 animate-load-bar"></div></div>
             </div>
 
             <!-- Currently Learning Section -->
           <div class="mt-6 pt-6 border-t border-border/50">
              <div class="flex gap-3">
-               <div class="flex items-center gap-1.5">
-                 
-               </div>
+               <div class="flex items-center gap-1.5"></div>
              </div>
           </div>
           </div>
@@ -493,7 +689,7 @@
       </div>
 
       <!-- COLUMN 3: TOOLS & DESIGN -->
-      <div class="group relative bg-surface border border-border rounded-3xl p-8 backdrop-blur-md transition-all duration-500 hover:border-violet/40 hover:-translate-y-2 hover:shadow-[0_20px_60px_-15px_rgba(124,58,237,0.15)] reveal" style="transition-delay: 200ms;">
+      <div class="group relative bg-surface border border-border rounded-3xl p-8 backdrop-blur-md transition-all duration-500 hover:border-violet/40 hover:-translate-y-2 hover:shadow-[0_20px_60px_-15px_rgba(124,58,237,0.15)] reveal col-tools" style="transition-delay: 200ms;">
         <div class="absolute inset-0 bg-gradient-to-b from-violet/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-3xl"></div>
         
         <div class="relative z-10">
@@ -509,60 +705,50 @@
 
           <div class="flex flex-col gap-3">
             <!-- Git -->
-            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-violet/10 hover:border-violet/30 transition-all duration-300 cursor-default group/item">
+            <div class="skill-item flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-violet/10 hover:border-violet/30 transition-all duration-300 cursor-default group/item">
               <div class="flex items-center gap-3">
-                <img
-  src="https://cdn.simpleicons.org/git"
-  alt="Git"
-  class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all"
-/>
+                <img src="https://cdn.simpleicons.org/git" alt="Git" class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all" />
                 <span class="font-mono text-sm text-text font-medium">Git</span>
               </div>
-              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 animate-load-bar"></div></div>
             </div>
 
             <!-- Docker -->
-            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-violet/10 hover:border-violet/30 transition-all duration-300 cursor-default group/item">
+            <div class="skill-item flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-violet/10 hover:border-violet/30 transition-all duration-300 cursor-default group/item">
               <div class="flex items-center gap-3">
-                <img
-  src="https://cdn.simpleicons.org/docker"
-  alt="Docker"
-  class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all"
-/>
+                <img src="https://cdn.simpleicons.org/docker" alt="Docker" class="w-5 h-5 grayscale group-hover/item:grayscale-0 transition-all" />
                 <span class="font-mono text-sm text-text font-medium">Docker</span>
               </div>
-              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 animate-load-bar"></div></div>
             </div>
 
             <!-- Vercel -->
-            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-violet/10 hover:border-violet/30 transition-all duration-300 cursor-default group/item">
+            <div class="skill-item flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-violet/10 hover:border-violet/30 transition-all duration-300 cursor-default group/item">
               <div class="flex items-center gap-3">
                 <svg class="w-5 h-5 text-muted group-hover/item:text-white transition-colors grayscale group-hover/item:grayscale-0" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 2L2 19h20L12 2z"/>
                 </svg>
                 <span class="font-mono text-sm text-text font-medium">Vercel</span>
               </div>
-              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 animate-load-bar"></div></div>
             </div>
 
             <!-- Figma -->
-            <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-violet/10 hover:border-violet/30 transition-all duration-300 cursor-default group/item">
+            <div class="skill-item flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-violet/10 hover:border-violet/30 transition-all duration-300 cursor-default group/item">
               <div class="flex items-center gap-3">
                 <svg class="w-5 h-5 text-muted group-hover/item:text-pink-500 transition-colors grayscale group-hover/item:grayscale-0" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M8 2h4v8H8a4 4 0 0 1 0-8Zm4 0h4a4 4 0 0 1 0 8h-4V2Zm0 8h4a4 4 0 0 1 0 8h-4v-8Zm-4 0h4v8H8a4 4 0 0 1 0-8Zm0 8h4v4a4 4 0 0 1-8 0 4 4 0 0 1 4-4Z"/>
                 </svg>
                 <span class="font-mono text-sm text-text font-medium">Figma</span>
               </div>
-              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 w-[100%]"></div></div>
+              <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-2 animate-load-bar"></div></div>
             </div>
           </div>
           
            <!-- Currently Learning Section -->
           <div class="mt-6 pt-6 border-t border-border/50">
              <div class="flex gap-3">
-               <div class="flex items-center gap-1.5">
-                 
-               </div>
+               <div class="flex items-center gap-1.5"></div>
              </div>
           </div>
         </div>
@@ -570,9 +756,42 @@
 
     </div>
   </div>
+
+  <!-- Script to handle the "End of Load" state -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+    const skillsSection = document.getElementById("skills");
+    const skillsContainer = document.getElementById("skills-container");
+
+    if (!skillsSection || !skillsContainer) return;
+
+    // 👉 CSS me "6s" hai, isliye yahan bhi 6000 (milliseconds) rakha
+    const ANIMATION_DURATION = 3000;
+
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+
+            skillsContainer.classList.add("skills-loading");
+            obs.unobserve(skillsSection);
+
+            setTimeout(() => {
+              skillsContainer.classList.remove("skills-loading");
+              skillsContainer.classList.add("skills-loaded");
+            }, ANIMATION_DURATION);
+          }
+        });
+      },
+      { threshold: 0.25 }
+    );
+
+    observer.observe(skillsSection);
+  });
+</script>
 </section>
 
-  
   <!-- Projects Section -->
   <section id="projects" class="py-[140px] px-6 md:px-12 relative z-10">
     <div class="max-w-[1400px] mx-auto">
@@ -653,25 +872,82 @@
     </div>
   </section>
 
-  <!-- Contact Section -->
-  <section id="contact" class="py-[180px] px-6 md:px-12 text-center relative z-10">
-    <div class="absolute inset-0 bg-radial-[ellipse_at_50%_50%,rgba(139,92,246,0.08),transparent_60%] pointer-events-none"></div>
-    
-    <div class="max-w-[800px] mx-auto relative z-10">
-      <div class="font-mono text-[11px] tracking-[0.3em] uppercase text-purple-2 mb-8">Get in touch</div>
-      <h2 class="font-serif text-[56px] md:text-[10vw] lg:text-[120px] font-normal leading-[0.95] tracking-tight text-cream mb-8">
-        Let's build<br><em class="italic text-purple-2 block">something great</em>
-      </h2>
-      <p class="text-lg leading-relaxed text-muted max-w-[500px] mx-auto mb-12">
-        Open to freelance projects, collaborations, and interesting conversations about design, code, and everything in between.
-      </p>
-      <a href="mailto:mahipriyadarshi0@gmail.com" class="inline-block font-serif text-2xl md:text-[28px] italic text-purple-2 no-underline py-4 border-b border-border hover:border-purple-2 hover:tracking-[0.01em] transition-all duration-300 mb-14">mahipriyadarshi0@gmail.com</a>
-      
-      <div class="flex flex-wrap justify-center gap-8">
-        <a href="#" class="flex items-center gap-2.5 font-mono text-[11px] tracking-[0.15em] uppercase text-muted no-underline px-6 py-3 border border-border rounded-full transition-all duration-300 hover:text-purple-2 hover:border-purple-2 hover:bg-purple/5 hover:-translate-y-0.5">GitHub</a>
-        <a href="#" class="flex items-center gap-2.5 font-mono text-[11px] tracking-[0.15em] uppercase text-muted no-underline px-6 py-3 border border-border rounded-full transition-all duration-300 hover:text-purple-2 hover:border-purple-2 hover:bg-purple/5 hover:-translate-y-0.5">LinkedIn</a>
-        <a href="#" class="flex items-center gap-2.5 font-mono text-[11px] tracking-[0.15em] uppercase text-muted no-underline px-6 py-3 border border-border rounded-full transition-all duration-300 hover:text-purple-2 hover:border-purple-2 hover:bg-purple/5 hover:-translate-y-0.5">Twitter</a>
-        <a href="#" class="flex items-center gap-2.5 font-mono text-[11px] tracking-[0.15em] uppercase text-muted no-underline px-6 py-3 border border-border rounded-full transition-all duration-300 hover:text-purple-2 hover:border-purple-2 hover:bg-purple/5 hover:-translate-y-0.5">Resume</a>
+<!-- Contact Section -->
+  <section id="contact" class="py-[160px] px-6 md:px-12 relative z-10 overflow-hidden">
+    <!-- Ambient glows -->
+    <div class="absolute top-1/3 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-purple/8 blur-[130px] rounded-full pointer-events-none"></div>
+    <div class="absolute bottom-0 right-1/4 w-[500px] h-[400px] bg-indigo/6 blur-[120px] rounded-full pointer-events-none"></div>
+
+    <div class="max-w-[1200px] mx-auto relative z-10">
+
+      <div class="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-16 lg:gap-8 items-end">
+
+        <!-- LEFT: Headline + copy + email -->
+        <div class="reveal">
+
+          <h2 class="font-serif text-[52px] md:text-[7vw] lg:text-[92px] font-normal leading-[0.95] tracking-tight text-cream mb-8">
+            Let's build<br><em class="italic text-purple-2">something great</em>
+          </h2>
+
+          <p class="text-lg leading-relaxed text-muted max-w-[440px] mb-10">
+            Open to freelance projects, collaborations, and interesting conversations about design, code, and everything in between.
+          </p>
+        </div>
+
+        <!-- RIGHT: Link card -->
+        <div class="reveal" style="transition-delay: 120ms;">
+          <div class="bg-surface border border-border rounded-3xl p-3 backdrop-blur-md">
+
+            <a href="https://github.com/mahi-p02" target="_blank" rel="noopener noreferrer" class="group/link flex items-center justify-between gap-4 p-4 rounded-2xl hover:bg-purple/10 transition-all duration-300 no-underline">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center shrink-0 group-hover/link:border-purple/30 transition-colors duration-300">
+                  <svg class="w-[18px] h-[18px] text-muted group-hover/link:text-cream transition-colors duration-300" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                </div>
+                <span class="font-mono text-[13px] tracking-[0.1em] uppercase text-text font-medium">GitHub</span>
+              </div>
+              <svg class="w-4 h-4 text-dim group-hover/link:text-purple-2 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-all duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            </a>
+
+            <div class="h-px bg-border/50 mx-4"></div>
+
+            <a href="https://www.linkedin.com/in/mahi-priyadarshi-9bb229388/" target="_blank" rel="noopener noreferrer" class="group/link flex items-center justify-between gap-4 p-4 rounded-2xl hover:bg-purple/10 transition-all duration-300 no-underline">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center shrink-0 group-hover/link:border-[#0A66C2]/40 transition-colors duration-300">
+                  <svg class="w-[18px] h-[18px] text-muted group-hover/link:text-[#0A66C2] transition-colors duration-300" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </div>
+                <span class="font-mono text-[13px] tracking-[0.1em] uppercase text-text font-medium">LinkedIn</span>
+              </div>
+              <svg class="w-4 h-4 text-dim group-hover/link:text-purple-2 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-all duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            </a>
+
+            <div class="h-px bg-border/50 mx-4"></div>
+
+            <!-- Email (swapped in for Twitter) -->
+            <a href="mailto:mahipriyadarshi0@gmail.com" class="group/link flex items-center justify-between gap-4 p-4 rounded-2xl hover:bg-purple/10 transition-all duration-300 no-underline">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center shrink-0 group-hover/link:border-purple/30 transition-colors duration-300">
+                  <svg class="w-[18px] h-[18px] text-muted group-hover/link:text-purple-2 transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6Z"/><path d="m22 6-10 7L2 6"/></svg>
+                </div>
+                <span class="font-mono text-[13px] tracking-[0.1em] uppercase text-text font-medium">Email</span>
+              </div>
+              <svg class="w-4 h-4 text-dim group-hover/link:text-purple-2 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-all duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            </a>
+
+            <div class="h-px bg-border/50 mx-4"></div>
+
+            <a href="#" class="group/link flex items-center justify-between gap-4 p-4 rounded-2xl hover:bg-purple/10 transition-all duration-300 no-underline">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center shrink-0 group-hover/link:border-purple/30 transition-colors duration-300">
+                  <svg class="w-[18px] h-[18px] text-muted group-hover/link:text-purple-2 transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>
+                </div>
+                <span class="font-mono text-[13px] tracking-[0.1em] uppercase text-text font-medium">Resume</span>
+              </div>
+              <svg class="w-4 h-4 text-dim group-hover/link:text-purple-2 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-all duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            </a>
+
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
